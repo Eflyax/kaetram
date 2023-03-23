@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  node:
+    container_name: "kae"
+    image: "node:16.15.1-buster"
+    working_dir: '/var/www/html'
+    volumes:
+      - ./:/var/www/html/
+    network_mode: "host"
+    stdin_open: true

@@ -1,54 +1,54 @@
 import log from '../lib/log';
 
 export default class Overlay {
-    private currentOverlay = '';
+	private currentOverlay = '';
 
-    private overlays: { [key: string]: HTMLImageElement } = {
-        fog: this.load('fog')
-    };
+	private overlays: { [key: string]: HTMLImageElement } = {
+		fog: this.load('fog')
+	};
 
-    /**
-     * Loads an overlay based on the provided string.
-     * @param name File name of the overlay.
-     * @returns HTML image of the overlay if it exists.
-     */
+	/**
+	 * Loads an overlay based on the provided string.
+	 * @param name File name of the overlay.
+	 * @returns HTML image of the overlay if it exists.
+	 */
 
-    private load(name: string): HTMLImageElement {
-        let overlay = new Image(),
-            image = `/img/overlays/${name}.png`;
+	private load(name: string): HTMLImageElement {
+		let overlay = new Image(),
+			image = `/img/overlays/${name}.png`;
 
-        overlay.crossOrigin = 'Anonymous';
-        overlay.src = image;
+		overlay.crossOrigin = 'Anonymous';
+		overlay.src = image;
 
-        overlay.addEventListener('load', () => log.debug(`Loaded ${name}`));
+		overlay.addEventListener('load', () => log.debug(`Loaded ${name}`));
 
-        return overlay;
-    }
+		return overlay;
+	}
 
-    /**
-     * @returns Whether or not overlay exists by checking if the string is empty.
-     */
+	/**
+	 * @returns Whether or not overlay exists by checking if the string is empty.
+	 */
 
-    public hasOverlay(): boolean {
-        return this.currentOverlay !== '';
-    }
+	public hasOverlay(): boolean {
+		return this.currentOverlay !== '';
+	}
 
-    /**
-     * Attempts to grab the current overlay.
-     * @returns The `currentOverlay` in our dictionary. If it
-     * doesn't exist, we just return undefined.
-     */
+	/**
+	 * Attempts to grab the current overlay.
+	 * @returns The `currentOverlay` in our dictionary. If it
+	 * doesn't exist, we just return undefined.
+	 */
 
-    public get(): HTMLImageElement {
-        return this.overlays[this.currentOverlay];
-    }
+	public get(): HTMLImageElement {
+		return this.overlays[this.currentOverlay];
+	}
 
-    /**
-     * Updates the `currentOverlay` to the provided string.
-     * @param overlay The new overlay to be set.
-     */
+	/**
+	 * Updates the `currentOverlay` to the provided string.
+	 * @param overlay The new overlay to be set.
+	 */
 
-    public update(overlay = ''): void {
-        this.currentOverlay = overlay;
-    }
+	public update(overlay = ''): void {
+		this.currentOverlay = overlay;
+	}
 }

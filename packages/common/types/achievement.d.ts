@@ -3,31 +3,31 @@
  */
 
 export interface RawAchievement {
-    name: string;
-    description?: string;
-    hidden?: boolean; // Whether or not to display description and achievement title.
-    secret?: boolean; // Secret achievements are only displayed when completed.
+	name: string;
+	description?: string;
+	hidden?: boolean; // Whether or not to display description and achievement title.
+	secret?: boolean; // Secret achievements are only displayed when completed.
 
-    npc?: string; // NPC handing out the achievement.
-    dialogueHidden?: string[]; // Dialogue to display before the achievement is discovered.
-    dialogueStarted?: string[]; // Dialogue when the achievement has been started.
+	npc?: string; // NPC handing out the achievement.
+	dialogueHidden?: string[]; // Dialogue to display before the achievement is discovered.
+	dialogueStarted?: string[]; // Dialogue when the achievement has been started.
 
-    mob?: string | string[]; // If the achievement requires a mob (or mobs) to be killed.
-    mobCount?: number; // How many of the mobs to be killed.
+	mob?: string | string[]; // If the achievement requires a mob (or mobs) to be killed.
+	mobCount?: number; // How many of the mobs to be killed.
 
-    item?: string; // If the achievement requires an item to be found.
-    itemCount?: number; // How much of an item to bring.
+	item?: string; // If the achievement requires an item to be found.
+	itemCount?: number; // How much of an item to bring.
 
-    rewardItem?: string; // String of the item we are rewarding.
-    rewardItemCount?: number; // How much of the item to reward.
+	rewardItem?: string; // String of the item we are rewarding.
+	rewardItemCount?: number; // How much of the item to reward.
 
-    rewardSkill?: string; // Skill we are rewarding experience in.
-    rewardExperience?: number; // How much experience to reward.
+	rewardSkill?: string; // Skill we are rewarding experience in.
+	rewardExperience?: number; // How much experience to reward.
 
-    rewardAbility?: string; // Key of the ability that is being rewarded.
-    rewardAbilityLevel?: number; // Optional, otherwise defaults to 1.
+	rewardAbility?: string; // Key of the ability that is being rewarded.
+	rewardAbilityLevel?: number; // Optional, otherwise defaults to 1.
 
-    // Experience reward to skills will be added later.
+	// Experience reward to skills will be added later.
 }
 
 /**
@@ -37,14 +37,14 @@ export interface RawAchievement {
  */
 
 export interface AchievementData {
-    key: string;
-    name?: string;
-    description?: string;
-    stage: number;
-    stageCount?: number;
-    secret?: boolean;
+	key: string;
+	name?: string;
+	description?: string;
+	stage: number;
+	stageCount?: number;
+	secret?: boolean;
 }
 
 export interface SerializedAchievement {
-    achievements: AchievementData[];
+	achievements: AchievementData[];
 }

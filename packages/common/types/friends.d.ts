@@ -1,8 +1,8 @@
 export interface FriendInfo {
-    online: boolean;
-    serverId: number;
+	online: boolean;
+	serverId: number;
 }
 
 export interface Friend {
-    [username: string]: FriendInfo;
+	[username: string]: FriendInfo;
 }

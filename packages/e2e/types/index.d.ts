@@ -1,5 +1,5 @@
 declare module 'express-mongo-rest' {
-    import type { Application } from 'express';
+	import type { Application } from 'express';
 
-    export default function expressMongoRest(url: string): Application;
+	export default function expressMongoRest(url: string): Application;
 }

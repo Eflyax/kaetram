@@ -1,5 +1,5 @@
 export interface PopupData {
-    title: string;
-    text: string;
-    colour: string;
+	title: string;
+	text: string;
+	colour: string;
 }

@@ -12,132 +12,128 @@ import type MongoDB from '@kaetram/common/database/mongodb/mongodb';
  */
 
 export default class Console {
-    private database: MongoDB;
+	private database: MongoDB;
 
-    public constructor(private world: World) {
-        this.database = world.database;
+	public constructor(private world: World) {
+		this.database = world.database;
 
-        let stdin = process.openStdin();
+		let stdin = process.openStdin();
 
-        stdin.addListener('data', (data: Buffer) => {
-            let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
-                type = message.charAt(0);
+		stdin.addListener('data', (data: Buffer) => {
+			let message = data.toString().replace(/(\r\n|\n|\r)/gm, ''),
+				type = message.charAt(0);
 
-            if (type !== '/') return;
+			if (type !== '/') return;
 
-            let blocks = message.slice(1).split(' '),
-                command = blocks.shift()!;
+			let blocks = message.slice(1).split(' '),
+				command = blocks.shift()!;
 
-            if (!command) return;
+			if (!command) return;
 
-            let username: string, player: Player;
+			let username: string, player: Player;
 
-            switch (command) {
-                case 'players': {
-                    log.info(
-                        `There are a total of ${
-                            this.world.entities.getPlayerUsernames().length
-                        } player(s) logged in.`
-                    );
+			switch (command) {
+				case 'players': {
+					log.info(
+						`There are a total of ${
+							this.world.entities.getPlayerUsernames().length
+						} player(s) logged in.`
+					);
 
-                    break;
-                }
+					break;
+				}
 
-                case 'total': {
-                    this.database.registeredCount((count: number) => {
-                        log.info(`There are ${count} users registered.`);
-                    });
+				case 'total': {
+					this.database.registeredCount((count: number) => {
+						log.info(`There are ${count} users registered.`);
+					});
 
-                    break;
-                }
+					break;
+				}
 
-                case 'update': {
-                    this.world.entities.forEachPlayer((player: Player) => {
-                        player.connection.reject('updated');
-                    });
+				case 'update': {
+					this.world.entities.forEachPlayer((player: Player) => {
+						player.connection.reject('updated');
+					});
 
-                    // No connections allowed for the remaining instance of the server.
-                    this.world.allowConnections = false;
+					// No connections allowed for the remaining instance of the server.
+					this.world.allowConnections = false;
 
-                    break;
-                }
+					break;
+				}
 
-                case 'kill': {
-                    username = blocks.join(' ');
+				case 'kill': {
+					username = blocks.join(' ');
 
-                    if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
+					if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
 
-                    player = this.world.getPlayerByName(username);
+					player = this.world.getPlayerByName(username);
 
-                    if (!player) return log.info('An error has occurred.');
+					if (!player) return log.info('An error has occurred.');
 
-                    player.hit(player.hitPoints.getHitPoints());
+					player.hit(player.hitPoints.getHitPoints());
 
-                    break;
-                }
+					break;
+				}
 
-                case 'kick':
-                case 'timeout': {
-                    username = blocks.join(' ');
+				case 'kick':
+				case 'timeout': {
+					username = blocks.join(' ');
 
-                    if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
+					if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
 
-                    player = this.world.getPlayerByName(username);
+					player = this.world.getPlayerByName(username);
 
-                    if (!player) return log.info('An error has occurred.');
+					if (!player) return log.info('An error has occurred.');
 
-                    player.connection.close();
+					player.connection.close();
 
-                    break;
-                }
+					break;
+				}
 
-                case 'setadmin':
-                case 'setmod': {
-                    username = blocks.join(' ');
+				case 'setadmin':
+				case 'setmod': {
+					username = blocks.join(' ');
 
-                    if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
+					if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
 
-                    player = this.world.getPlayerByName(username);
+					player = this.world.getPlayerByName(username);
 
-                    if (!player) return log.info(`Player not found.`);
+					if (!player) return log.info(`Player not found.`);
 
-                    player.setRank(
-                        command === 'setadmin' ? Modules.Ranks.Admin : Modules.Ranks.Moderator
-                    );
+					player.setRank(command === 'setadmin' ? Modules.Ranks.Admin : Modules.Ranks.Moderator);
 
-                    player.sync();
+					player.sync();
 
-                    log.info(
-                        `${player.username} is now a ${command === 'setadmin' ? 'admin' : 'mod'}!`
-                    );
+					log.info(`${player.username} is now a ${command === 'setadmin' ? 'admin' : 'mod'}!`);
 
-                    break;
-                }
+					break;
+				}
 
-                case 'removeadmin':
-                case 'removemod': {
-                    username = blocks.join(' ');
+				case 'removeadmin':
+				case 'removemod': {
+					username = blocks.join(' ');
 
-                    if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
+					if (!this.world.isOnline(username)) return log.info('Player is not logged in.');
 
-                    player = this.world.getPlayerByName(username);
+					player = this.world.getPlayerByName(username);
 
-                    if (!player) return log.info(`Player not found.`);
+					if (!player) return log.info(`Player not found.`);
 
-                    player.setRank();
+					player.setRank();
 
-                    player.notify(`Your ranks have been stripped from you.`);
+					player.notify(`Your ranks have been stripped from you.`);
 
-                    player.sync();
+					player.sync();
 
-                    break;
-                }
+					break;
+				}
 
-                case 'save': {
-                    log.info(`Saving all players.`);
-                    return this.world.save();
-                }
-            }
-        });
-    }
+				case 'save': {
+					log.info(`Saving all players.`);
+					return this.world.save();
+				}
+			}
+		});
+	}
 }

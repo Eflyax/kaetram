@@ -1,4 +1,4 @@
 export interface TotalExperience {
-    username: string;
-    totalExperience: number;
+	username: string;
+	totalExperience: number;
 }

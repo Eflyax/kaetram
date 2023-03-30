@@ -8,9 +8,9 @@ import type { Modules } from '../network';
 import type { Enchantments } from './item';
 
 export interface EntityDisplayInfo {
-    instance: string;
-    colour?: string;
-    scale?: number;
+	instance: string;
+	colour?: string;
+	scale?: number;
 }
 
 /**
@@ -21,36 +21,36 @@ export interface EntityDisplayInfo {
  */
 
 export interface EntityData {
-    // Entity data
-    instance: string;
-    type: number;
-    key: string;
-    name: string;
-    x: number;
-    y: number;
+	// Entity data
+	instance: string;
+	type: number;
+	key: string;
+	name: string;
+	x: number;
+	y: number;
 
-    // Optional paramaeters
-    colour?: string; // Name colour
-    scale?: number; // Custom scale for the entity
+	// Optional paramaeters
+	colour?: string; // Name colour
+	scale?: number; // Custom scale for the entity
 
-    // Character data
-    movementSpeed?: number;
-    hitPoints?: number;
-    maxHitPoints?: number;
-    attackRange?: number;
-    level?: number;
-    hiddenName?: boolean;
-    orientation?: Modules.Orientation;
+	// Character data
+	movementSpeed?: number;
+	hitPoints?: number;
+	maxHitPoints?: number;
+	attackRange?: number;
+	level?: number;
+	hiddenName?: boolean;
+	orientation?: Modules.Orientation;
 
-    // Item data
-    count?: number;
-    enchantments?: Enchantments;
+	// Item data
+	count?: number;
+	enchantments?: Enchantments;
 
-    // Projectile data
-    ownerInstance?: string;
-    targetInstance?: string;
-    damage?: number;
-    hitType?: Modules.Hits;
+	// Projectile data
+	ownerInstance?: string;
+	targetInstance?: string;
+	damage?: number;
+	hitType?: Modules.Hits;
 
-    displayInfo?: EntityDisplayInfo;
+	displayInfo?: EntityDisplayInfo;
 }

@@ -1,32 +1,32 @@
 {
-    "ordinary": {
-        "gold": 1600,
-        "flask": 900,
-        "bigflask": 520,
-        "manaflask": 660,
-        "bigmanaflask": 400,
-        "burger": 480
-    },
+	"ordinary": {
+		"gold": 1600,
+		"flask": 900,
+		"bigflask": 520,
+		"manaflask": 660,
+		"bigmanaflask": 400,
+		"burger": 480
+	},
 
-    "arrows": {
-        "arrow": 1600,
-        "firearrow": 450,
-        "poisonarrow": 500,
-        "lightningarrow": 350,
-        "icearrow": 400
-    },
+	"arrows": {
+		"arrow": 1600,
+		"firearrow": 450,
+		"poisonarrow": 500,
+		"lightningarrow": 350,
+		"icearrow": 400
+	},
 
-    "unusual": {
-        "blackpotion": 200,
-        "hotsauce": 200,
-        "poisoncure": 200,
-        "shardt1": 100,
-        "logs": 100,
-        "stick": 400,
-        "bead": 200
-    },
+	"unusual": {
+		"blackpotion": 200,
+		"hotsauce": 200,
+		"poisoncure": 200,
+		"shardt1": 100,
+		"logs": 100,
+		"stick": 400,
+		"bead": 200
+	},
 
-    "warriorcrab": {
-        "bead": 10000
-    }
+	"warriorcrab": {
+		"bead": 10000
+	}
 }

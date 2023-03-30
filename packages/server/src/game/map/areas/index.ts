@@ -7,11 +7,11 @@ import overlay from './impl/overlay';
 import pvp from './impl/pvp';
 
 export default {
-    camera,
-    chests,
-    music,
-    overlay,
-    pvp,
-    dynamic,
-    minigame
+	camera,
+	chests,
+	music,
+	overlay,
+	pvp,
+	dynamic,
+	minigame
 };

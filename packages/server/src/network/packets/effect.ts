@@ -6,7 +6,7 @@ import type { Opcodes } from '@kaetram/common/network';
 import type { EffectPacket } from '@kaetram/common/types/messages/outgoing';
 
 export default class Effect extends Packet {
-    public constructor(opcode: Opcodes.Effect, data: EffectPacket) {
-        super(Packets.Effect, opcode, data);
-    }
+	public constructor(opcode: Opcodes.Effect, data: EffectPacket) {
+		super(Packets.Effect, opcode, data);
+	}
 }

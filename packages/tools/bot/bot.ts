@@ -11,138 +11,138 @@ import { io } from 'socket.io-client';
 import type { Socket } from 'socket.io-client';
 
 interface PacketInfo {
-    instance: string;
-    x: number;
-    y: number;
+	instance: string;
+	x: number;
+	y: number;
 }
 
 export default class Bot {
-    #bots: Entity[] = [];
-    #botCount = 300;
+	#bots: Entity[] = [];
+	#botCount = 300;
 
-    public constructor() {
-        this.load();
-    }
+	public constructor() {
+		this.load();
+	}
 
-    private load(): void {
-        let connecting = setInterval(() => {
-            this.connect();
+	private load(): void {
+		let connecting = setInterval(() => {
+			this.connect();
 
-            if (--this.#botCount < 1) clearInterval(connecting);
-        }, 100);
+			if (--this.#botCount < 1) clearInterval(connecting);
+		}, 100);
 
-        setInterval(() => {
-            for (let bot of this.#bots) {
-                this.move(bot);
+		setInterval(() => {
+			for (let bot of this.#bots) {
+				this.move(bot);
 
-                if (Utils.randomInt(0, 50) === 10) this.talk(bot);
-            }
-        }, 2000);
-    }
+				if (Utils.randomInt(0, 50) === 10) this.talk(bot);
+			}
+		}, 2000);
+	}
 
-    private connect(): void {
-        let connection = io('ws://127.0.0.1:9001', {
-            transports: ['websocket'],
-            forceNew: true,
-            reconnection: false
-        });
+	private connect(): void {
+		let connection = io('ws://127.0.0.1:9001', {
+			transports: ['websocket'],
+			forceNew: true,
+			reconnection: false
+		});
 
-        connection.on('connect', () => {
-            log.info('Connection established...');
+		connection.on('connect', () => {
+			log.info('Connection established...');
 
-            connection.emit('client', {
-                gVer: config.gver,
-                cType: 'HTML5'
-            });
-        });
+			connection.emit('client', {
+				gVer: config.gver,
+				cType: 'HTML5'
+			});
+		});
 
-        connection.on('connect_error', () => {
-            log.info('Failed to establish connection.');
-        });
+		connection.on('connect_error', () => {
+			log.info('Failed to establish connection.');
+		});
 
-        connection.on('message', (message: string) => {
-            if (message.startsWith('[')) {
-                let data = JSON.parse(message);
+		connection.on('message', (message: string) => {
+			if (message.startsWith('[')) {
+				let data = JSON.parse(message);
 
-                if (data.length > 1) for (let msg of data) this.handlePackets(connection, msg);
-                else this.handlePackets(connection, JSON.parse(message).shift());
-            } else this.handlePackets(connection, message as never, 'utf8');
-        });
+				if (data.length > 1) for (let msg of data) this.handlePackets(connection, msg);
+				else this.handlePackets(connection, JSON.parse(message).shift());
+			} else this.handlePackets(connection, message as never, 'utf8');
+		});
 
-        // connection.on('disconnect', () => {});
-    }
+		// connection.on('disconnect', () => {});
+	}
 
-    private handlePackets(connection: Socket, message: [Packets, PacketInfo], type?: string): void {
-        if (type === 'utf8' || !Array.isArray(message)) {
-            log.info(`Received UTF8 message ${message}.`);
+	private handlePackets(connection: Socket, message: [Packets, PacketInfo], type?: string): void {
+		if (type === 'utf8' || !Array.isArray(message)) {
+			log.info(`Received UTF8 message ${message}.`);
 
-            return;
-        }
+			return;
+		}
 
-        let [opcode, info] = message;
+		let [opcode, info] = message;
 
-        switch (opcode) {
-            case Packets.Handshake: {
-                this.send(connection, 1, [2, `n${this.#bots.length}`, 'n', 'n']);
+		switch (opcode) {
+			case Packets.Handshake: {
+				this.send(connection, 1, [2, `n${this.#bots.length}`, 'n', 'n']);
 
-                break;
-            }
+				break;
+			}
 
-            case Packets.Welcome: {
-                this.#bots.push(new Entity(info.instance, info.x, info.y, connection));
+			case Packets.Welcome: {
+				this.#bots.push(new Entity(info.instance, info.x, info.y, connection));
 
-                break;
-            }
+				break;
+			}
 
-            case Packets.Combat: {
-                break;
-            }
-        }
-    }
+			case Packets.Combat: {
+				break;
+			}
+		}
+	}
 
-    private send(connection: Socket, packet: number, data: (string | number)[]): void {
-        let json = JSON.stringify([packet, data]);
+	private send(connection: Socket, packet: number, data: (string | number)[]): void {
+		let json = JSON.stringify([packet, data]);
 
-        if (connection?.connected) connection.send(json);
-    }
+		if (connection?.connected) connection.send(json);
+	}
 
-    private move(bot: Entity): void {
-        let currentX = bot.x,
-            currentY = bot.y,
-            newX = currentX + Utils.randomInt(-3, 3),
-            newY = currentY + Utils.randomInt(-3, 3);
+	private move(bot: Entity): void {
+		let currentX = bot.x,
+			currentY = bot.y,
+			newX = currentX + Utils.randomInt(-3, 3),
+			newY = currentY + Utils.randomInt(-3, 3);
 
-        setTimeout(() => {
-            // Movement Request
+		setTimeout(() => {
+			// Movement Request
 
-            this.send(bot.connection, 9, [0, newX, newY, currentX, currentY]);
-        }, 250);
+			this.send(bot.connection, 9, [0, newX, newY, currentX, currentY]);
+		}, 250);
 
-        setTimeout(() => {
-            // Empty target packet
+		setTimeout(() => {
+			// Empty target packet
 
-            this.send(bot.connection, 13, [2]);
-        }, 250);
+			this.send(bot.connection, 13, [2]);
+		}, 250);
 
-        setTimeout(() => {
-            // Start Movement
+		setTimeout(() => {
+			// Start Movement
 
-            this.send(bot.connection, 9, [1, newX, newY, currentX, currentY, 250]);
-        }, 250);
+			this.send(bot.connection, 9, [1, newX, newY, currentX, currentY, 250]);
+		}, 250);
 
-        setTimeout(() => {
-            // Stop Movement
+		setTimeout(() => {
+			// Stop Movement
 
-            this.send(bot.connection, 9, [3, newX, newY]);
-        }, 1000);
+			this.send(bot.connection, 9, [3, newX, newY]);
+		}, 1000);
 
-        bot.x = newX;
-        bot.y = newY;
-    }
+		bot.x = newX;
+		bot.y = newY;
+	}
 
-    private talk(bot: Entity): void {
-        this.send(bot.connection, 20, ['am human, hello there.']);
-    }
+	private talk(bot: Entity): void {
+		this.send(bot.connection, 20, ['am human, hello there.']);
+	}
 }
 
 new Bot();

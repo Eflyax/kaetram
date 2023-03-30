@@ -8,12 +8,12 @@ import minersquest from './minersquest';
 import evilsanta from './evilsanta';
 
 export default {
-    tutorial,
-    foresting,
-    desertquest,
-    seaactivities,
-    ancientlands,
-    sorcery,
-    minersquest,
-    evilsanta
+	tutorial,
+	foresting,
+	desertquest,
+	seaactivities,
+	ancientlands,
+	sorcery,
+	minersquest,
+	evilsanta
 };

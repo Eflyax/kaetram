@@ -17,952 +17,925 @@ import type Entity from '../game/entity/entity';
 import type Region from '../game/map/region';
 
 export default class Commands {
-    private world;
-    private entities;
-
-    public constructor(private player: Player) {
-        let { world } = player;
-
-        this.world = world;
-        this.entities = world.entities;
-    }
-
-    public parse(rawText: string): void {
-        let blocks = rawText.slice(1).split(' ');
-
-        if (blocks.length === 0) return;
-
-        let command = blocks.shift()!;
-
-        this.handlePlayerCommands(command, blocks);
-        this.handleArtistCommands(command, blocks);
-        this.handleModeratorCommands(command, blocks);
-        this.handleAdminCommands(command, blocks);
-    }
-
-    /**
-     * Commands that are accessible to all the players.
-     * @param command The command that was entered.
-     * @param blocks Associated string blocks after the command.
-     */
-
-    private handlePlayerCommands(command: string, blocks: string[]): void {
-        switch (command) {
-            case 'players': {
-                let population = this.world.getPopulation(),
-                    singular = population === 1;
-
-                this.player.notify(
-                    `There ${singular ? 'is' : 'are'} currently ${population} ${
-                        singular ? 'person' : 'people'
-                    } online.`
-                );
-
-                return;
-            }
-
-            case 'coords': {
-                this.player.send(
-                    new Notification(Opcodes.Notification.Text, {
-                        message: `x: ${this.player.x} y: ${this.player.y}`
-                    })
-                );
-                return;
-            }
-
-            case 'global': {
-                return this.player.chat(
-                    Filter.clean(blocks.join(' ')),
-                    true,
-                    false,
-                    'rgba(191, 161, 63, 1.0)'
-                );
-            }
-
-            case 'pm':
-            case 'msg': {
-                let asterikBlocks = blocks.join(' ').split('*'),
-                    [, username] = asterikBlocks;
+	private world;
+	private entities;
+
+	public constructor(private player: Player) {
+		let { world } = player;
+
+		this.world = world;
+		this.entities = world.entities;
+	}
+
+	public parse(rawText: string): void {
+		let blocks = rawText.slice(1).split(' ');
+
+		if (blocks.length === 0) return;
+
+		let command = blocks.shift()!;
+
+		this.handlePlayerCommands(command, blocks);
+		this.handleArtistCommands(command, blocks);
+		this.handleModeratorCommands(command, blocks);
+		this.handleAdminCommands(command, blocks);
+	}
+
+	/**
+	 * Commands that are accessible to all the players.
+	 * @param command The command that was entered.
+	 * @param blocks Associated string blocks after the command.
+	 */
+
+	private handlePlayerCommands(command: string, blocks: string[]): void {
+		switch (command) {
+			case 'players': {
+				let population = this.world.getPopulation(),
+					singular = population === 1;
+
+				this.player.notify(
+					`There ${singular ? 'is' : 'are'} currently ${population} ${
+						singular ? 'person' : 'people'
+					} online.`
+				);
+
+				return;
+			}
+
+			case 'coords': {
+				this.player.send(
+					new Notification(Opcodes.Notification.Text, {
+						message: `x: ${this.player.x} y: ${this.player.y}`
+					})
+				);
+				return;
+			}
+
+			case 'global': {
+				return this.player.chat(
+					Filter.clean(blocks.join(' ')),
+					true,
+					false,
+					'rgba(191, 161, 63, 1.0)'
+				);
+			}
 
-                if (!username) return;
+			case 'pm':
+			case 'msg': {
+				let asterikBlocks = blocks.join(' ').split('*'),
+					[, username] = asterikBlocks;
 
-                let message = blocks.slice(username.split(' ').length).join(' ');
+				if (!username) return;
 
-                this.player.sendPrivateMessage(username.toLowerCase(), message);
+				let message = blocks.slice(username.split(' ').length).join(' ');
 
-                break;
-            }
+				this.player.sendPrivateMessage(username.toLowerCase(), message);
 
-            case 'ping': {
-                this.player.ping();
-                break;
-            }
-        }
-    }
+				break;
+			}
 
-    /**
-     * Commands accessible only to artists and administrators.
-     * @param command The command that was entered.
-     * @param blocks The associated string blocks after the command.
-     */
+			case 'ping': {
+				this.player.ping();
+				break;
+			}
+		}
+	}
 
-    private handleArtistCommands(command: string, blocks: string[]): void {
-        if (!this.player.isArtist() && !this.player.isAdmin()) return;
+	/**
+	 * Commands accessible only to artists and administrators.
+	 * @param command The command that was entered.
+	 * @param blocks The associated string blocks after the command.
+	 */
 
-        switch (command) {
-            case 'toggle': {
-                let key = blocks.shift()!;
+	private handleArtistCommands(command: string, blocks: string[]): void {
+		if (!this.player.isArtist() && !this.player.isAdmin()) return;
 
-                if (!key) return this.player.notify('No key specified.');
+		switch (command) {
+			case 'toggle': {
+				let key = blocks.shift()!;
 
-                return this.player.send(new Command({ command: `toggle${key}` }));
-            }
-        }
-    }
+				if (!key) return this.player.notify('No key specified.');
 
-    /**
-     * Commands only accessible to moderators and administrators.
-     * @param command The command that was entered.
-     * @param blocks The associated string blocks after the command.
-     */
+				return this.player.send(new Command({ command: `toggle${key}` }));
+			}
+		}
+	}
 
-    private handleModeratorCommands(command: string, blocks: string[]): void {
-        if (!this.player.isMod() && !this.player.isAdmin()) return;
+	/**
+	 * Commands only accessible to moderators and administrators.
+	 * @param command The command that was entered.
+	 * @param blocks The associated string blocks after the command.
+	 */
 
-        switch (command) {
-            case 'mute':
-            case 'ban': {
-                let duration = parseInt(blocks.shift()!),
-                    targetName = blocks.join(' ');
-
-                if (!duration || !targetName)
-                    return this.player.notify(
-                        'Malformed command, expected /ban(mute) [duration] [username]'
-                    );
-
-                let user: Player = this.world.getPlayerByName(targetName);
+	private handleModeratorCommands(command: string, blocks: string[]): void {
+		if (!this.player.isMod() && !this.player.isAdmin()) return;
 
-                if (!user)
-                    return this.player.notify(`Could not find player with name: ${targetName}.`);
+		switch (command) {
+			case 'mute':
+			case 'ban': {
+				let duration = parseInt(blocks.shift()!),
+					targetName = blocks.join(' ');
 
-                // Moderators can only mute/ban people within certain limits.
-                if (this.player.isMod()) {
-                    if (command === 'mute' && duration > 168) duration = 168;
-                    if (command === 'ban' && duration > 72) duration = 72;
-                }
+				if (!duration || !targetName)
+					return this.player.notify('Malformed command, expected /ban(mute) [duration] [username]');
 
-                // Convert hours to milliseconds.
-                duration *= 60 * 60 * 1000;
+				let user: Player = this.world.getPlayerByName(targetName);
 
-                let timeFrame = Date.now() + duration;
+				if (!user) return this.player.notify(`Could not find player with name: ${targetName}.`);
 
-                if (command === 'mute') {
-                    user.mute = timeFrame;
-                    user.save();
+				// Moderators can only mute/ban people within certain limits.
+				if (this.player.isMod()) {
+					if (command === 'mute' && duration > 168) duration = 168;
+					if (command === 'ban' && duration > 72) duration = 72;
+				}
 
-                    this.player.notify(`${user.username} has been muted for ${duration} hours.`);
-                } else if (command === 'ban') {
-                    user.ban = timeFrame;
+				// Convert hours to milliseconds.
+				duration *= 60 * 60 * 1000;
 
-                    user.connection.sendUTF8('ban');
-                    user.connection.close('banned');
+				let timeFrame = Date.now() + duration;
 
-                    this.player.notify(`${user.username} has been banned for ${duration} hours.`);
-                }
+				if (command === 'mute') {
+					user.mute = timeFrame;
+					user.save();
 
-                return;
-            }
+					this.player.notify(`${user.username} has been muted for ${duration} hours.`);
+				} else if (command === 'ban') {
+					user.ban = timeFrame;
 
-            case 'unmute': {
-                let uTargetName = blocks.join(' '),
-                    uUser = this.world.getPlayerByName(uTargetName);
+					user.connection.sendUTF8('ban');
+					user.connection.close('banned');
 
-                if (!uTargetName) return this.player.notify(`Player ${uTargetName} not found.`);
+					this.player.notify(`${user.username} has been banned for ${duration} hours.`);
+				}
 
-                uUser.mute = Date.now() - 3600;
+				return;
+			}
 
-                uUser.save();
+			case 'unmute': {
+				let uTargetName = blocks.join(' '),
+					uUser = this.world.getPlayerByName(uTargetName);
 
-                this.player.notify(`${uUser.username} has been unmuted.`);
+				if (!uTargetName) return this.player.notify(`Player ${uTargetName} not found.`);
 
-                return;
-            }
+				uUser.mute = Date.now() - 3600;
 
-            case 'kick':
-            case 'forcekick': {
-                let username = blocks.join(' ');
+				uUser.save();
 
-                if (!username)
-                    return this.player.notify(`Malformed command, expected /kick username`);
+				this.player.notify(`${uUser.username} has been unmuted.`);
 
-                let player = this.world.getPlayerByName(username);
+				return;
+			}
 
-                if (!player)
-                    return this.player.notify(`Could not find player with name: ${username}`);
+			case 'kick':
+			case 'forcekick': {
+				let username = blocks.join(' ');
 
-                player.connection.close(
-                    `${this.player.username} kicked ${username}`,
-                    command === 'forcekick'
-                );
+				if (!username) return this.player.notify(`Malformed command, expected /kick username`);
 
-                break;
-            }
-        }
-    }
+				let player = this.world.getPlayerByName(username);
 
-    /**
-     * The commands only accessible to administrators.
-     * @param command The command that was entered.
-     * @param blocks The associated string blocks after the command.
-     */
+				if (!player) return this.player.notify(`Could not find player with name: ${username}`);
 
-    private handleAdminCommands(command: string, blocks: string[]): void {
-        if (!this.player.isAdmin()) return;
+				player.connection.close(
+					`${this.player.username} kicked ${username}`,
+					command === 'forcekick'
+				);
 
-        let username: string,
-            player: Player,
-            x: number,
-            y: number,
-            instance: string,
-            target: string,
-            key: string,
-            entity: Character,
-            targetEntity: Character,
-            questKey: string,
-            quest: Quest,
-            achievementKey: string,
-            achievement: Achievement,
-            region: Region,
-            item: Item;
+				break;
+			}
+		}
+	}
 
-        switch (command) {
-            case 'spawn': {
-                let key = blocks.shift(),
-                    count = parseInt(blocks.shift()!);
+	/**
+	 * The commands only accessible to administrators.
+	 * @param command The command that was entered.
+	 * @param blocks The associated string blocks after the command.
+	 */
 
-                if (!key) return;
+	private handleAdminCommands(command: string, blocks: string[]): void {
+		if (!this.player.isAdmin()) return;
 
-                if (!count) count = 1;
+		let username: string,
+			player: Player,
+			x: number,
+			y: number,
+			instance: string,
+			target: string,
+			key: string,
+			entity: Character,
+			targetEntity: Character,
+			questKey: string,
+			quest: Quest,
+			achievementKey: string,
+			achievement: Achievement,
+			region: Region,
+			item: Item;
 
-                item = new Item(key, -1, -1, true, 1);
+		switch (command) {
+			case 'spawn': {
+				let key = blocks.shift(),
+					count = parseInt(blocks.shift()!);
 
-                if (!item.exists) return this.player.notify(`No item with key ${key} exists.`);
+				if (!key) return;
 
-                item.count = count;
+				if (!count) count = 1;
 
-                this.player.inventory.add(item);
+				item = new Item(key, -1, -1, true, 1);
 
-                return;
-            }
+				if (!item.exists) return this.player.notify(`No item with key ${key} exists.`);
 
-            case 'take': {
-                let index = parseInt(blocks.shift()!),
-                    container = blocks.shift()!,
-                    username = blocks.join(' ');
+				item.count = count;
 
-                if (!index || !username)
-                    return this.player.notify(
-                        'Invalid command, usage /take [index] [container=bank/inventory] [username]'
-                    );
+				this.player.inventory.add(item);
 
-                let player = this.world.getPlayerByName(username);
+				return;
+			}
 
-                if (!player) return this.player.notify(`Player ${username} not found.`);
+			case 'take': {
+				let index = parseInt(blocks.shift()!),
+					container = blocks.shift()!,
+					username = blocks.join(' ');
 
-                let containerType = container === 'inventory' ? player.inventory : player.bank,
-                    slot = containerType.get(index);
+				if (!index || !username)
+					return this.player.notify(
+						'Invalid command, usage /take [index] [container=bank/inventory] [username]'
+					);
 
-                if (!slot.key)
-                    return this.player.notify(`Player ${username} has no item at index ${index}.`);
+				let player = this.world.getPlayerByName(username);
 
-                containerType.remove(index, slot.count);
+				if (!player) return this.player.notify(`Player ${username} not found.`);
 
-                this.player.notify(`Took ${slot.count}x ${slot.key} from ${username}.`);
+				let containerType = container === 'inventory' ? player.inventory : player.bank,
+					slot = containerType.get(index);
 
-                return;
-            }
+				if (!slot.key)
+					return this.player.notify(`Player ${username} has no item at index ${index}.`);
 
-            case 'takeitem': {
-                let key = blocks.shift(),
-                    count = parseInt(blocks.shift()!),
-                    container = blocks.shift()!,
-                    username = blocks.join(' ');
+				containerType.remove(index, slot.count);
 
-                if (!key || !username || (container !== 'inventory' && container !== 'bank'))
-                    return this.player.notify(
-                        'Invalid command, usage /takeitem [key] [count] [container=bank/inventory] [username]'
-                    );
+				this.player.notify(`Took ${slot.count}x ${slot.key} from ${username}.`);
 
-                let player = this.world.getPlayerByName(username);
+				return;
+			}
 
-                if (!player) return this.player.notify(`Player ${username} not found.`);
+			case 'takeitem': {
+				let key = blocks.shift(),
+					count = parseInt(blocks.shift()!),
+					container = blocks.shift()!,
+					username = blocks.join(' ');
 
-                let containerType = container === 'inventory' ? player.inventory : player.bank;
+				if (!key || !username || (container !== 'inventory' && container !== 'bank'))
+					return this.player.notify(
+						'Invalid command, usage /takeitem [key] [count] [container=bank/inventory] [username]'
+					);
 
-                containerType.removeItem(key, count);
+				let player = this.world.getPlayerByName(username);
 
-                this.player.notify(`Took ${count}x ${key} from ${username}.`);
+				if (!player) return this.player.notify(`Player ${username} not found.`);
 
-                return;
-            }
+				let containerType = container === 'inventory' ? player.inventory : player.bank;
 
-            case 'copybank':
-            case 'copyinventory': {
-                let username = blocks.join(' ');
+				containerType.removeItem(key, count);
 
-                if (!username)
-                    return this.player.notify('Invalid command, usage /copybank [username]');
+				this.player.notify(`Took ${count}x ${key} from ${username}.`);
 
-                let player = this.world.getPlayerByName(username);
+				return;
+			}
 
-                if (!player) return this.player.notify(`Player ${username} is not online.`);
+			case 'copybank':
+			case 'copyinventory': {
+				let username = blocks.join(' ');
 
-                if (command === 'copybank') {
-                    this.player.bank.empty();
+				if (!username) return this.player.notify('Invalid command, usage /copybank [username]');
 
-                    player.bank.forEachSlot((slot) =>
-                        this.player.bank.add(this.player.bank.getItem(slot))
-                    );
-                } else {
-                    this.player.inventory.empty();
+				let player = this.world.getPlayerByName(username);
 
-                    player.inventory.forEachSlot((slot) =>
-                        this.player.inventory.add(this.player.inventory.getItem(slot))
-                    );
-                }
+				if (!player) return this.player.notify(`Player ${username} is not online.`);
 
-                this.player.notify(`Copied ${username}'s ${command} to your ${command}.`);
-            }
+				if (command === 'copybank') {
+					this.player.bank.empty();
 
-            case 'drop': {
-                let key = blocks.shift(),
-                    count = parseInt(blocks.shift()!);
+					player.bank.forEachSlot((slot) => this.player.bank.add(this.player.bank.getItem(slot)));
+				} else {
+					this.player.inventory.empty();
 
-                if (!key) return;
+					player.inventory.forEachSlot((slot) =>
+						this.player.inventory.add(this.player.inventory.getItem(slot))
+					);
+				}
 
-                if (!count) count = 1;
+				this.player.notify(`Copied ${username}'s ${command} to your ${command}.`);
+			}
 
-                this.world.entities.spawnItem(key, this.player.x, this.player.y, true, count);
-            }
+			case 'drop': {
+				let key = blocks.shift(),
+					count = parseInt(blocks.shift()!);
 
-            case 'remove': {
-                let key = blocks.shift(),
-                    count = parseInt(blocks.shift()!);
+				if (!key) return;
 
-                if (!key || !count) return;
+				if (!count) count = 1;
 
-                this.player.inventory.removeItem(key, count);
+				this.world.entities.spawnItem(key, this.player.x, this.player.y, true, count);
+			}
 
-                return;
-            }
+			case 'remove': {
+				let key = blocks.shift(),
+					count = parseInt(blocks.shift()!);
 
-            case 'empty': {
-                return this.player.inventory.empty();
-            }
+				if (!key || !count) return;
 
-            case 'notify': {
-                this.player.notify('Hello!!!');
+				this.player.inventory.removeItem(key, count);
 
-                return;
-            }
+				return;
+			}
 
-            case 'teleport': {
-                let x = parseInt(blocks.shift()!),
-                    y = parseInt(blocks.shift()!),
-                    withAnimation = parseInt(blocks.shift()!);
+			case 'empty': {
+				return this.player.inventory.empty();
+			}
 
-                if (x && y) this.player.teleport(x, y, !!withAnimation);
+			case 'notify': {
+				this.player.notify('Hello!!!');
 
-                return;
-            }
+				return;
+			}
 
-            case 'teletome': {
-                username = blocks.join(' ');
-                player = this.world.getPlayerByName(username);
+			case 'teleport': {
+				let x = parseInt(blocks.shift()!),
+					y = parseInt(blocks.shift()!),
+					withAnimation = parseInt(blocks.shift()!);
 
-                player?.teleport(this.player.x, this.player.y);
+				if (x && y) this.player.teleport(x, y, !!withAnimation);
 
-                return;
-            }
+				return;
+			}
 
-            case 'teleto': {
-                username = blocks.join(' ');
-                player = this.world.getPlayerByName(username);
+			case 'teletome': {
+				username = blocks.join(' ');
+				player = this.world.getPlayerByName(username);
 
-                if (player) this.player.teleport(player.x, player.y);
+				player?.teleport(this.player.x, this.player.y);
 
-                return;
-            }
+				return;
+			}
 
-            case 'nohit':
-            case 'invincible': {
-                this.player.invincible = !this.player.invincible;
+			case 'teleto': {
+				username = blocks.join(' ');
+				player = this.world.getPlayerByName(username);
 
-                if (this.player.invincible) this.player.notify('You are now invincible.');
-                else this.player.notify('You are no longer invincible.');
+				if (player) this.player.teleport(player.x, player.y);
 
-                return;
-            }
+				return;
+			}
 
-            case 'mob': {
-                target = blocks.shift()!;
+			case 'nohit':
+			case 'invincible': {
+				this.player.invincible = !this.player.invincible;
 
-                if (!target) return this.player.notify('No mob specified.');
+				if (this.player.invincible) this.player.notify('You are now invincible.');
+				else this.player.notify('You are no longer invincible.');
 
-                this.entities.spawnMob(target, this.player.x, this.player.y);
+				return;
+			}
 
-                return;
-            }
+			case 'mob': {
+				target = blocks.shift()!;
 
-            case 'allattack': {
-                region = this.world.map.regions.get(this.player.region);
-                target = blocks.shift()!;
+				if (!target) return this.player.notify('No mob specified.');
 
-                if (!target)
-                    return this.player.notify(
-                        `Invalid command. Usage: /allattack [target_instance]`
-                    );
+				this.entities.spawnMob(target, this.player.x, this.player.y);
 
-                if (!region) return this.player.notify('Bro what.');
+				return;
+			}
 
-                targetEntity = this.entities.get(target) as Character;
+			case 'allattack': {
+				region = this.world.map.regions.get(this.player.region);
+				target = blocks.shift()!;
 
-                if (!targetEntity) return;
+				if (!target)
+					return this.player.notify(`Invalid command. Usage: /allattack [target_instance]`);
 
-                region.forEachEntity((entity: Entity) => {
-                    if (!entity.isMob() || entity.instance === target) return;
+				if (!region) return this.player.notify('Bro what.');
 
-                    entity.combat.attack(targetEntity);
-                });
+				targetEntity = this.entities.get(target) as Character;
 
-                break;
-            }
+				if (!targetEntity) return;
 
-            case 'pointer': {
-                if (blocks.length > 1) {
-                    let posX = parseInt(blocks.shift()!),
-                        posY = parseInt(blocks.shift()!);
+				region.forEachEntity((entity: Entity) => {
+					if (!entity.isMob() || entity.instance === target) return;
 
-                    if (!posX || !posY) return;
+					entity.combat.attack(targetEntity);
+				});
 
-                    this.player.send(
-                        new Pointer(Opcodes.Pointer.Location, {
-                            id: this.player.instance,
-                            x: posX,
-                            y: posY
-                        })
-                    );
-                } else {
-                    let instance = blocks.shift()!;
+				break;
+			}
 
-                    if (!instance) return;
+			case 'pointer': {
+				if (blocks.length > 1) {
+					let posX = parseInt(blocks.shift()!),
+						posY = parseInt(blocks.shift()!);
 
-                    this.player.send(
-                        new Pointer(Opcodes.Pointer.Entity, {
-                            id: instance
-                        })
-                    );
-                }
+					if (!posX || !posY) return;
 
-                return;
-            }
+					this.player.send(
+						new Pointer(Opcodes.Pointer.Location, {
+							id: this.player.instance,
+							x: posX,
+							y: posY
+						})
+					);
+				} else {
+					let instance = blocks.shift()!;
 
-            case 'teleall': {
-                this.entities.forEachPlayer((player: Player) => {
-                    player.teleport(this.player.x, this.player.y);
-                });
+					if (!instance) return;
 
-                return;
-            }
+					this.player.send(
+						new Pointer(Opcodes.Pointer.Entity, {
+							id: instance
+						})
+					);
+				}
 
-            case 'getregion': {
-                this.player.notify(`Current Region: ${this.player.region}`);
-                return;
-            }
+				return;
+			}
 
-            case 'debug': {
-                this.player.send(new Command({ command: 'debug' }));
+			case 'teleall': {
+				this.entities.forEachPlayer((player: Player) => {
+					player.teleport(this.player.x, this.player.y);
+				});
 
-                return;
-            }
+				return;
+			}
 
-            case 'addexp':
-            case 'addexperience': {
-                key = blocks.shift()!;
-                x = parseInt(blocks.shift()!);
+			case 'getregion': {
+				this.player.notify(`Current Region: ${this.player.region}`);
+				return;
+			}
 
-                if (!key || !x) return;
+			case 'debug': {
+				this.player.send(new Command({ command: 'debug' }));
 
-                key = key.charAt(0).toUpperCase() + key.slice(1);
+				return;
+			}
 
-                this.player.skills
-                    .get(Modules.Skills[key as keyof typeof Modules.Skills])
-                    ?.addExperience(x);
+			case 'addexp':
+			case 'addexperience': {
+				key = blocks.shift()!;
+				x = parseInt(blocks.shift()!);
 
-                return;
-            }
+				if (!key || !x) return;
 
-            case 'setlevel': {
-                key = blocks.shift()!;
-                x = parseInt(blocks.shift()!);
-                username = blocks.join(' ');
+				key = key.charAt(0).toUpperCase() + key.slice(1);
 
-                if (!username || !key || !x)
-                    return this.player.notify(
-                        'Malformed command, expected /setlevel [skill] [level] [username]'
-                    );
+				this.player.skills
+					.get(Modules.Skills[key as keyof typeof Modules.Skills])
+					?.addExperience(x);
 
-                player = this.world.getPlayerByName(username);
+				return;
+			}
 
-                if (!player) return this.player.notify(`Player ${username} is not online.`);
+			case 'setlevel': {
+				key = blocks.shift()!;
+				x = parseInt(blocks.shift()!);
+				username = blocks.join(' ');
 
-                key = key.charAt(0).toUpperCase() + key.slice(1);
+				if (!username || !key || !x)
+					return this.player.notify(
+						'Malformed command, expected /setlevel [skill] [level] [username]'
+					);
 
-                let skill = player.skills.get(Modules.Skills[key as keyof typeof Modules.Skills]);
+				player = this.world.getPlayerByName(username);
 
-                if (!skill) return this.player.notify('Invalid skill.');
+				if (!player) return this.player.notify(`Player ${username} is not online.`);
 
-                if (x < skill.level) {
-                    skill.setExperience(0);
-                    skill.addExperience(0);
-                } else skill.addExperience(Formulas.levelsToExperience(skill.level, x));
+				key = key.charAt(0).toUpperCase() + key.slice(1);
 
-                return;
-            }
+				let skill = player.skills.get(Modules.Skills[key as keyof typeof Modules.Skills]);
 
-            case 'resetskills': {
-                // Skills aren't meant to go backwards so you gotta sync and stuff lmao.
-                this.player.skills.forEachSkill((skill: Skill) => {
-                    skill.setExperience(0);
-                    skill.addExperience(0);
-                });
-                this.player.skills.sync();
-                break;
-            }
+				if (!skill) return this.player.notify('Invalid skill.');
 
-            case 'max': {
-                this.player.skills.forEachSkill((skill: Skill) => {
-                    skill.setExperience(0);
-                    skill.addExperience(669_420_769);
-                });
-                break;
-            }
+				if (x < skill.level) {
+					skill.setExperience(0);
+					skill.addExperience(0);
+				} else skill.addExperience(Formulas.levelsToExperience(skill.level, x));
 
-            case 'attackrange': {
-                log.info(this.player.attackRange);
-                return;
-            }
+				return;
+			}
 
-            case 'resetregions': {
-                log.info('Resetting regions...');
+			case 'resetskills': {
+				// Skills aren't meant to go backwards so you gotta sync and stuff lmao.
+				this.player.skills.forEachSkill((skill: Skill) => {
+					skill.setExperience(0);
+					skill.addExperience(0);
+				});
+				this.player.skills.sync();
+				break;
+			}
 
-                this.player.regionsLoaded = [];
-                this.player.updateRegion();
+			case 'max': {
+				this.player.skills.forEachSkill((skill: Skill) => {
+					skill.setExperience(0);
+					skill.addExperience(669_420_769);
+				});
+				break;
+			}
 
-                return;
-            }
+			case 'attackrange': {
+				log.info(this.player.attackRange);
+				return;
+			}
 
-            case 'clear': {
-                this.player.inventory.forEachSlot((slot) => {
-                    this.player.inventory.remove(slot.index, slot.count);
-                });
+			case 'resetregions': {
+				log.info('Resetting regions...');
 
-                break;
-            }
+				this.player.regionsLoaded = [];
+				this.player.updateRegion();
 
-            case 'timeout': {
-                this.player.connection.reject('timeout', true);
+				return;
+			}
 
-                break;
-            }
+			case 'clear': {
+				this.player.inventory.forEachSlot((slot) => {
+					this.player.inventory.remove(slot.index, slot.count);
+				});
 
-            case 'togglepvp': {
-                this.entities.forEachPlayer((player: Player) => {
-                    player.updatePVP(true);
-                });
+				break;
+			}
 
-                break;
-            }
+			case 'timeout': {
+				this.player.connection.reject('timeout', true);
 
-            case 'ms': {
-                let movementSpeed = parseInt(blocks.shift()!);
+				break;
+			}
 
-                if (!movementSpeed) {
-                    this.player.notify('No movement speed specified.');
-                    return;
-                }
+			case 'togglepvp': {
+				this.entities.forEachPlayer((player: Player) => {
+					player.updatePVP(true);
+				});
 
-                if (movementSpeed < 75)
-                    // Just to not break stuff.
-                    movementSpeed = 75;
+				break;
+			}
 
-                this.player.overrideMovementSpeed = movementSpeed;
+			case 'ms': {
+				let movementSpeed = parseInt(blocks.shift()!);
 
-                break;
-            }
+				if (!movementSpeed) {
+					this.player.notify('No movement speed specified.');
+					return;
+				}
 
-            case 'popup': {
-                this.player.popup(
-                    'New Quest Found!',
-                    '@blue@New @darkblue@quest @green@has@red@ been discovered!'
-                );
+				if (movementSpeed < 75)
+					// Just to not break stuff.
+					movementSpeed = 75;
 
-                break;
-            }
+				this.player.overrideMovementSpeed = movementSpeed;
 
-            case 'resetquests': {
-                this.player.quests.forEachQuest((quest: Quest) => quest.setStage(0));
-                break;
-            }
+				break;
+			}
 
-            case 'resetquest': {
-                key = blocks.shift()!;
+			case 'popup': {
+				this.player.popup(
+					'New Quest Found!',
+					'@blue@New @darkblue@quest @green@has@red@ been discovered!'
+				);
 
-                if (!key) return this.player.notify('No quest specified.');
+				break;
+			}
 
-                this.player.quests.get(key)?.setStage(0);
-                break;
-            }
+			case 'resetquests': {
+				this.player.quests.forEachQuest((quest: Quest) => quest.setStage(0));
+				break;
+			}
 
-            case 'resetachievements': {
-                this.player.achievements.forEachAchievement((achievement) =>
-                    achievement.setStage(0)
-                );
+			case 'resetquest': {
+				key = blocks.shift()!;
 
-                this.player.updateRegion();
+				if (!key) return this.player.notify('No quest specified.');
 
-                break;
-            }
+				this.player.quests.get(key)?.setStage(0);
+				break;
+			}
 
-            case 'movenpc': {
-                instance = blocks.shift()!;
-                x = parseInt(blocks.shift()!);
-                y = parseInt(blocks.shift()!);
+			case 'resetachievements': {
+				this.player.achievements.forEachAchievement((achievement) => achievement.setStage(0));
 
-                if (!instance)
-                    return this.player.notify(`Malformed command, expected /movenpc instance x y`);
+				this.player.updateRegion();
 
-                entity = this.entities.get(instance) as Character;
+				break;
+			}
 
-                if (!entity) return this.player.notify(`Entity not found.`);
+			case 'movenpc': {
+				instance = blocks.shift()!;
+				x = parseInt(blocks.shift()!);
+				y = parseInt(blocks.shift()!);
 
-                if (entity.isMob()) entity.move(x, y);
+				if (!instance)
+					return this.player.notify(`Malformed command, expected /movenpc instance x y`);
 
-                break;
-            }
+				entity = this.entities.get(instance) as Character;
 
-            case 'nvn': {
-                // NPC vs NPC (specify two instances)
-                instance = blocks.shift()!;
-                target = blocks.shift()!;
+				if (!entity) return this.player.notify(`Entity not found.`);
 
-                if (!instance || !target)
-                    return this.player.notify(`Malformed command, expected /nvn instance target`);
+				if (entity.isMob()) entity.move(x, y);
 
-                entity = this.entities.get(instance) as Character;
-                targetEntity = this.entities.get(target) as Character;
+				break;
+			}
 
-                if (!entity || !targetEntity)
-                    return this.player.notify(`Could not find entity instances specified.`);
+			case 'nvn': {
+				// NPC vs NPC (specify two instances)
+				instance = blocks.shift()!;
+				target = blocks.shift()!;
 
-                entity.combat.attack(targetEntity);
+				if (!instance || !target)
+					return this.player.notify(`Malformed command, expected /nvn instance target`);
 
-                this.player.notify(`${entity.name} is attacking ${targetEntity.name}`);
+				entity = this.entities.get(instance) as Character;
+				targetEntity = this.entities.get(target) as Character;
 
-                break;
-            }
+				if (!entity || !targetEntity)
+					return this.player.notify(`Could not find entity instances specified.`);
 
-            case 'kill': {
-                username = blocks.join(' ');
+				entity.combat.attack(targetEntity);
 
-                if (!username)
-                    return this.player.notify(
-                        `Malformed command, expected /kill username/instance`
-                    );
+				this.player.notify(`${entity.name} is attacking ${targetEntity.name}`);
 
-                player = this.world.getPlayerByName(username);
+				break;
+			}
 
-                if (player) player.hit(player.hitPoints.getHitPoints());
+			case 'kill': {
+				username = blocks.join(' ');
 
-                targetEntity = this.entities.get(username) as Character;
+				if (!username)
+					return this.player.notify(`Malformed command, expected /kill username/instance`);
 
-                if (targetEntity) targetEntity.hit(targetEntity.hitPoints.getHitPoints());
+				player = this.world.getPlayerByName(username);
 
-                break;
-            }
+				if (player) player.hit(player.hitPoints.getHitPoints());
 
-            case 'finishquest': {
-                questKey = blocks.shift()!;
+				targetEntity = this.entities.get(username) as Character;
 
-                if (!questKey)
-                    return this.player.notify(`Malformed command, expected /finishquest questKey`);
+				if (targetEntity) targetEntity.hit(targetEntity.hitPoints.getHitPoints());
 
-                quest = this.player.quests.get(questKey);
+				break;
+			}
 
-                if (quest) quest.setStage(9999);
-                else this.player.notify(`Could not find quest with key: ${questKey}`);
+			case 'finishquest': {
+				questKey = blocks.shift()!;
 
-                break;
-            }
+				if (!questKey)
+					return this.player.notify(`Malformed command, expected /finishquest questKey`);
 
-            case 'finishachievement': {
-                achievementKey = blocks.shift()!;
+				quest = this.player.quests.get(questKey);
 
-                if (!achievementKey)
-                    return this.player.notify(
-                        `Malformed command, expected /finishachievement achievementKey`
-                    );
+				if (quest) quest.setStage(9999);
+				else this.player.notify(`Could not find quest with key: ${questKey}`);
 
-                achievement = this.player.achievements.get(achievementKey);
+				break;
+			}
 
-                if (achievement) achievement.finish();
-                else this.player.notify(`Could not find achievement with key: ${achievementKey}`);
+			case 'finishachievement': {
+				achievementKey = blocks.shift()!;
 
-                break;
-            }
+				if (!achievementKey)
+					return this.player.notify(
+						`Malformed command, expected /finishachievement achievementKey`
+					);
 
-            case 'finishachievements': {
-                return this.player.achievements.forEachAchievement((achievement) =>
-                    achievement.finish()
-                );
-            }
+				achievement = this.player.achievements.get(achievementKey);
 
-            case 'poison': {
-                instance = blocks.shift()!;
+				if (achievement) achievement.finish();
+				else this.player.notify(`Could not find achievement with key: ${achievementKey}`);
 
-                if (instance) {
-                    log.debug('Poisoning entity...');
+				break;
+			}
 
-                    entity = this.entities.get(instance) as Character;
+			case 'finishachievements': {
+				return this.player.achievements.forEachAchievement((achievement) => achievement.finish());
+			}
 
-                    if (!entity)
-                        return this.player.notify(
-                            `Could not find entity with instance: ${instance}`
-                        );
+			case 'poison': {
+				instance = blocks.shift()!;
 
-                    if (!entity.isMob() && !entity.isPlayer())
-                        this.player.notify('That entity cannot be poisoned.');
+				if (instance) {
+					log.debug('Poisoning entity...');
 
-                    if (entity.poison) {
-                        entity.setPoison();
-                        this.player.notify('Entity has been cured of poison.');
-                    } else {
-                        entity.setPoison(0);
-                        this.player.notify('Entity has been poisoned.');
-                    }
-                } else {
-                    log.debug('Poisoning player.');
+					entity = this.entities.get(instance) as Character;
 
-                    if (this.player.poison) {
-                        this.player.setPoison();
-                        this.player.notify('Your poison has been cured!');
-                    } else {
-                        this.player.setPoison(0); // 0 === Modules.PoisonType.Venom
-                        this.player.notify('You have been poisoned!');
-                    }
-                }
+					if (!entity)
+						return this.player.notify(`Could not find entity with instance: ${instance}`);
 
-                break;
-            }
+					if (!entity.isMob() && !entity.isPlayer())
+						this.player.notify('That entity cannot be poisoned.');
 
-            case 'poisonarea': {
-                region = this.world.map.regions.get(this.player.region);
+					if (entity.poison) {
+						entity.setPoison();
+						this.player.notify('Entity has been cured of poison.');
+					} else {
+						entity.setPoison(0);
+						this.player.notify('Entity has been poisoned.');
+					}
+				} else {
+					log.debug('Poisoning player.');
 
-                if (!region) this.player.notify('Bro something went badly wrong wtf.');
+					if (this.player.poison) {
+						this.player.setPoison();
+						this.player.notify('Your poison has been cured!');
+					} else {
+						this.player.setPoison(0); // 0 === Modules.PoisonType.Venom
+						this.player.notify('You have been poisoned!');
+					}
+				}
 
-                this.player.notify(`All entities in the region will be nuked with poison.`);
+				break;
+			}
 
-                region.forEachEntity((entity: Entity) => {
-                    if (!entity.isMob() && !entity.isPlayer()) return;
+			case 'poisonarea': {
+				region = this.world.map.regions.get(this.player.region);
 
-                    (entity as Character).setPoison(0);
-                });
+				if (!region) this.player.notify('Bro something went badly wrong wtf.');
 
-                break;
-            }
+				this.player.notify(`All entities in the region will be nuked with poison.`);
 
-            case 'roam': {
-                region = this.world.map.regions.get(this.player.region);
+				region.forEachEntity((entity: Entity) => {
+					if (!entity.isMob() && !entity.isPlayer()) return;
 
-                if (!region) this.player.notify('Bro something went badly wrong wtf.');
+					(entity as Character).setPoison(0);
+				});
 
-                this.player.notify(`All mobs in the region will now roam!`);
+				break;
+			}
 
-                region.forEachEntity((entity: Entity) => {
-                    if (!entity.isMob()) return;
+			case 'roam': {
+				region = this.world.map.regions.get(this.player.region);
 
-                    entity.roamingCallback?.();
-                });
+				if (!region) this.player.notify('Bro something went badly wrong wtf.');
 
-                break;
-            }
+				this.player.notify(`All mobs in the region will now roam!`);
 
-            case 'talk': {
-                instance = blocks.shift()!;
+				region.forEachEntity((entity: Entity) => {
+					if (!entity.isMob()) return;
 
-                if (!instance)
-                    return this.player.notify(`Malformed command, expected /talk instance`);
+					entity.roamingCallback?.();
+				});
 
-                targetEntity = this.entities.get(instance) as Character;
+				break;
+			}
 
-                if (!targetEntity)
-                    return this.player.notify(`Could not find entity with instance: ${instance}`);
+			case 'talk': {
+				instance = blocks.shift()!;
 
-                (targetEntity as Mob).talkCallback?.('This is a test talking message lol');
+				if (!instance) return this.player.notify(`Malformed command, expected /talk instance`);
 
-                break;
-            }
+				targetEntity = this.entities.get(instance) as Character;
 
-            case 'distance': {
-                x = parseInt(blocks.shift()!);
-                y = parseInt(blocks.shift()!);
+				if (!targetEntity)
+					return this.player.notify(`Could not find entity with instance: ${instance}`);
 
-                if (!x || !y)
-                    return this.player.notify(`Malformed command, expected /distance x y`);
+				(targetEntity as Mob).talkCallback?.('This is a test talking message lol');
 
-                this.player.notify(
-                    `Distance: ${Utils.getDistance(this.player.x, this.player.y, x, y)}`
-                );
+				break;
+			}
 
-                break;
-            }
+			case 'distance': {
+				x = parseInt(blocks.shift()!);
+				y = parseInt(blocks.shift()!);
 
-            case 'nuke': {
-                let all = !!blocks.shift();
+				if (!x || !y) return this.player.notify(`Malformed command, expected /distance x y`);
 
-                region = this.world.map.regions.get(this.player.region);
+				this.player.notify(`Distance: ${Utils.getDistance(this.player.x, this.player.y, x, y)}`);
 
-                region.forEachEntity((entity: Entity) => {
-                    if (!(entity instanceof Character)) return;
-                    if (entity.instance === this.player.instance) return;
+				break;
+			}
 
-                    if (!all && entity.isPlayer()) return;
+			case 'nuke': {
+				let all = !!blocks.shift();
 
-                    entity.deathCallback?.();
-                });
+				region = this.world.map.regions.get(this.player.region);
 
-                this.player.notify(
-                    'Congratulations, you killed everyone, are you happy with yourself?'
-                );
+				region.forEachEntity((entity: Entity) => {
+					if (!(entity instanceof Character)) return;
+					if (entity.instance === this.player.instance) return;
 
-                break;
-            }
+					if (!all && entity.isPlayer()) return;
 
-            case 'noclip': {
-                this.player.noclip = !this.player.noclip;
+					entity.deathCallback?.();
+				});
 
-                this.player.notify(`Noclip: ${this.player.noclip}`);
-                break;
-            }
+				this.player.notify('Congratulations, you killed everyone, are you happy with yourself?');
 
-            case 'addability': {
-                key = blocks.shift()!;
+				break;
+			}
 
-                if (!key) return this.player.notify(`Malformed command, expected /addability key`);
+			case 'noclip': {
+				this.player.noclip = !this.player.noclip;
 
-                this.player.abilities.add(key, 1);
-                break;
-            }
+				this.player.notify(`Noclip: ${this.player.noclip}`);
+				break;
+			}
 
-            case 'setability': {
-                key = blocks.shift()!;
-                x = parseInt(blocks.shift()!);
+			case 'addability': {
+				key = blocks.shift()!;
 
-                if (!key || !x)
-                    return this.player.notify(`Malformed command, expected /setability key level`);
+				if (!key) return this.player.notify(`Malformed command, expected /addability key`);
 
-                this.player.abilities.setLevel(key, x);
+				this.player.abilities.add(key, 1);
+				break;
+			}
 
-                break;
-            }
+			case 'setability': {
+				key = blocks.shift()!;
+				x = parseInt(blocks.shift()!);
 
-            case 'setquickslot': {
-                key = blocks.shift()!;
-                x = parseInt(blocks.shift()!);
+				if (!key || !x)
+					return this.player.notify(`Malformed command, expected /setability key level`);
 
-                if (!key || isNaN(x))
-                    return this.player.notify(
-                        `Malformed command, expected /setquickslot key quickslot`
-                    );
+				this.player.abilities.setLevel(key, x);
 
-                this.player.abilities.setQuickSlot(key, x);
-                break;
-            }
+				break;
+			}
 
-            case 'resetabilities': {
-                return this.player.abilities.reset();
-            }
+			case 'setquickslot': {
+				key = blocks.shift()!;
+				x = parseInt(blocks.shift()!);
 
-            case 'store': {
-                key = blocks.shift()!;
+				if (!key || isNaN(x))
+					return this.player.notify(`Malformed command, expected /setquickslot key quickslot`);
 
-                if (!key) return this.player.notify(`Malformed command, expected /store key`);
+				this.player.abilities.setQuickSlot(key, x);
+				break;
+			}
 
-                this.player.send(new Store(Opcodes.Store.Open, this.world.stores.serialize(key)));
+			case 'resetabilities': {
+				return this.player.abilities.reset();
+			}
 
-                this.player.storeOpen = key;
+			case 'store': {
+				key = blocks.shift()!;
 
-                break;
-            }
+				if (!key) return this.player.notify(`Malformed command, expected /store key`);
 
-            case 'aoe': {
-                this.player.hit(600, this.player, 2);
-                break;
-            }
+				this.player.send(new Store(Opcodes.Store.Open, this.world.stores.serialize(key)));
 
-            case 'bank': {
-                this.player.send(new NPC(Opcodes.NPC.Bank, this.player.bank.serialize()));
-                break;
-            }
+				this.player.storeOpen = key;
 
-            case 'openbank': {
-                let username = blocks.shift()!;
+				break;
+			}
 
-                if (!username)
-                    return this.player.notify(`Malformed command, expected /openbank username`);
+			case 'aoe': {
+				this.player.hit(600, this.player, 2);
+				break;
+			}
 
-                let player = this.world.getPlayerByName(username);
+			case 'bank': {
+				this.player.send(new NPC(Opcodes.NPC.Bank, this.player.bank.serialize()));
+				break;
+			}
 
-                if (!player) return this.player.notify(`Could not find player: ${username}`);
+			case 'openbank': {
+				let username = blocks.shift()!;
 
-                this.player.send(new NPC(Opcodes.NPC.Bank, player.bank.serialize()));
+				if (!username) return this.player.notify(`Malformed command, expected /openbank username`);
 
-                break;
-            }
+				let player = this.world.getPlayerByName(username);
 
-            case 'setrank': {
-                let rankText = blocks.shift()!;
+				if (!player) return this.player.notify(`Could not find player: ${username}`);
 
-                username = blocks.join(' ');
+				this.player.send(new NPC(Opcodes.NPC.Bank, player.bank.serialize()));
 
-                if (!username || !rankText)
-                    return this.player.notify(`Malformed command, expected /setrank username rank`);
+				break;
+			}
 
-                player = this.world.getPlayerByName(username);
+			case 'setrank': {
+				let rankText = blocks.shift()!;
 
-                if (!player)
-                    return this.world.database.setRank(
-                        username,
-                        Modules.Ranks[rankText as keyof typeof Modules.Ranks]
-                    );
+				username = blocks.join(' ');
 
-                let rank = Modules.Ranks[rankText as keyof typeof Modules.Ranks];
+				if (!username || !rankText)
+					return this.player.notify(`Malformed command, expected /setrank username rank`);
 
-                if (isNaN(rank)) return this.player.notify(`Invalid rank: ${rankText}`);
+				player = this.world.getPlayerByName(username);
 
-                player.setRank(rank);
-                player.sync();
+				if (!player)
+					return this.world.database.setRank(
+						username,
+						Modules.Ranks[rankText as keyof typeof Modules.Ranks]
+					);
 
-                break;
-            }
+				let rank = Modules.Ranks[rankText as keyof typeof Modules.Ranks];
 
-            case 'setpet': {
-                let key = blocks.shift()!;
+				if (isNaN(rank)) return this.player.notify(`Invalid rank: ${rankText}`);
 
-                if (!key) return this.player.notify(`Malformed command, expected /setpet key`);
+				player.setRank(rank);
+				player.sync();
 
-                this.player.setPet(key);
-            }
-        }
-    }
+				break;
+			}
+
+			case 'setpet': {
+				let key = blocks.shift()!;
+
+				if (!key) return this.player.notify(`Malformed command, expected /setpet key`);
+
+				this.player.setPet(key);
+			}
+		}
+	}
 }

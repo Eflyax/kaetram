@@ -3,11 +3,11 @@
  */
 
 declare interface Position {
-    x: number;
-    y: number;
+	x: number;
+	y: number;
 
-    gridX?: number;
-    gridY?: number;
+	gridX?: number;
+	gridY?: number;
 }
 
 /**
@@ -16,9 +16,9 @@ declare interface Position {
  */
 
 declare interface Coordinate {
-    x: number;
-    y: number;
+	x: number;
+	y: number;
 
-    gridX: number;
-    gridY: number;
+	gridX: number;
+	gridY: number;
 }

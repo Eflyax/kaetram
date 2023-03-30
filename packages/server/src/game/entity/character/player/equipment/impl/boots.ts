@@ -6,17 +6,17 @@ import type { Enchantments } from '@kaetram/common/types/item';
 import type Item from '../../../../objects/item';
 
 export default class Boots extends Equipment {
-    public constructor(key = '', count = -1, enchantments: Enchantments = {}) {
-        super(Modules.Equipment.Boots, key, count, enchantments);
-    }
+	public constructor(key = '', count = -1, enchantments: Enchantments = {}) {
+		super(Modules.Equipment.Boots, key, count, enchantments);
+	}
 
-    /**
-     * Override function that adds the equipment's power level.
-     */
+	/**
+	 * Override function that adds the equipment's power level.
+	 */
 
-    public override update(item: Item): void {
-        super.update(item);
+	public override update(item: Item): void {
+		super.update(item);
 
-        this.movementModifier = item.movementModifier;
-    }
+		this.movementModifier = item.movementModifier;
+	}
 }

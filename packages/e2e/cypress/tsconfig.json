@@ -1,12 +1,12 @@
 {
-    "extends": "../tsconfig.json",
-    "compilerOptions": {
-        "module": "commonjs",
-        "target": "es6",
+	"extends": "../tsconfig.json",
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es6",
 
-        "preserveSymlinks": true,
+		"preserveSymlinks": true,
 
-        "types": ["@types/node", "cypress"]
-    },
-    "include": ["**/*.ts"]
+		"types": ["@types/node", "cypress"]
+	},
+	"include": ["**/*.ts"]
 }

@@ -7,13 +7,13 @@ import snowpotion from './snowpotion';
 import type Player from '@kaetram/server/src/game/entity/character/player/player';
 
 export interface Plugin {
-    onUse(player: Player): boolean;
+	onUse(player: Player): boolean;
 }
 
 export default {
-    healthflask,
-    poisoncure,
-    blackpotion,
-    hotsauce,
-    snowpotion
+	healthflask,
+	poisoncure,
+	blackpotion,
+	hotsauce,
+	snowpotion
 };

@@ -1,60 +1,60 @@
 @use '../../abstracts/media';
 
 #enchant {
-    cursor: url('/img/3/hand.png'), auto;
+	cursor: url('/img/3/hand.png'), auto;
 
-    position: absolute;
-    inset: 0;
+	position: absolute;
+	inset: 0;
 
-    display: none;
+	display: none;
 
-    margin: auto;
+	margin: auto;
 }
 
 #enchant-inventory-slots {
-    left: 13%;
+	left: 13%;
 }
 
 #enchant-selected-item,
 #enchant-shards {
-    position: absolute;
-    top: 80%;
-    background-size: cover;
+	position: absolute;
+	top: 80%;
+	background-size: cover;
 }
 
 #enchant-selected-item {
-    left: 11%;
+	left: 11%;
 }
 
 #enchant-shards {
-    left: 34%;
+	left: 34%;
 }
 
 @each $size, $i in media.$sizes {
-    @media ($size) {
-        #enchant {
-            width: 129px * $i;
-            height: 155px * $i;
-            background: url('/img/#{$i}/containers.png') 0 0;
-        }
+	@media ($size) {
+		#enchant {
+			width: 129px * $i;
+			height: 155px * $i;
+			background: url('/img/#{$i}/containers.png') 0 0;
+		}
 
-        #enchant-selected-item,
-        #enchant-shards {
-            width: 16px * $i;
-            height: 15px * $i;
-        }
+		#enchant-selected-item,
+		#enchant-shards {
+			width: 16px * $i;
+			height: 15px * $i;
+		}
 
-        #enchant-container {
-            background-image: url('/img/#{$i}/containers.png');
-        }
+		#enchant-container {
+			background-image: url('/img/#{$i}/containers.png');
+		}
 
-        .inventory-slots {
-            width: 96px * $i;
-            height: 80px * $i;
-        }
+		.inventory-slots {
+			width: 96px * $i;
+			height: 80px * $i;
+		}
 
-        #shards-count {
-            width: 16px * $i;
-        }
-    }
+		#shards-count {
+			width: 16px * $i;
+		}
+	}
 }

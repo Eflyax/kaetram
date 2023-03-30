@@ -1,7 +1,7 @@
 export interface SerializedLight {
-    x: number;
-    y: number;
-    colour: string;
-    diffuse: number;
-    distance: number;
+	x: number;
+	y: number;
+	colour: string;
+	diffuse: number;
+	distance: number;
 }

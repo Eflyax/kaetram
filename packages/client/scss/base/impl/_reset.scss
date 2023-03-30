@@ -60,78 +60,78 @@ thead,
 tr,
 th,
 td {
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 
-    font-size: 100%;
-    vertical-align: baseline;
+	font-size: 100%;
+	vertical-align: baseline;
 
-    background-color: transparent;
-    border: 0;
-    outline: 0;
+	background-color: transparent;
+	border: 0;
+	outline: 0;
 }
 
 html,
 body {
-    position: absolute;
-    top: 0;
-    left: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
 
-    overflow: hidden;
+	overflow: hidden;
 
-    width: 100%;
-    height: 100%;
+	width: 100%;
+	height: 100%;
 
-    background-color: #000;
+	background-color: #000;
 }
 
 canvas {
-    position: absolute;
-    image-rendering: pixelated;
+	position: absolute;
+	image-rendering: pixelated;
 }
 
 body {
-    touch-action: manipulation;
+	touch-action: manipulation;
 
-    overflow: hidden;
+	overflow: hidden;
 
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 
-    line-height: 1;
+	line-height: 1;
 
-    background: linear-gradient(to bottom, rgb(0 0 0 / 0%), rgb(0 0 0 / 0%), rgb(0 0 0 / 60%)),
-        url('/img/tile.png') center center;
-    background-size: auto;
+	background: linear-gradient(to bottom, rgb(0 0 0 / 0%), rgb(0 0 0 / 0%), rgb(0 0 0 / 60%)),
+		url('/img/tile.png') center center;
+	background-size: auto;
 
-    image-rendering: pixelated;
+	image-rendering: pixelated;
 }
 
 ol,
 ul {
-    list-style: none;
+	list-style: none;
 }
 
 blockquote,
 q {
-    quotes: none;
+	quotes: none;
 }
 
 :focus {
-    outline: 0;
+	outline: 0;
 }
 
 ins {
-    text-decoration: none;
+	text-decoration: none;
 }
 
 del {
-    text-decoration: line-through;
+	text-decoration: line-through;
 }
 
 table {
-    border-spacing: 0;
-    border-collapse: collapse;
+	border-spacing: 0;
+	border-collapse: collapse;
 }
 
 article,
@@ -144,32 +144,32 @@ header,
 menu,
 nav,
 section {
-    display: block;
+	display: block;
 }
 
 audio,
 video {
-    display: inline-block;
+	display: inline-block;
 }
 
 /**
  * Add the correct display in iOS 4-7.
  */
 audio:not([controls]) {
-    display: none;
-    height: 0;
+	display: none;
+	height: 0;
 }
 
 button,
 html [type='button'],
 [type='reset'],
 [type='submit'] {
-    appearance: button;
+	appearance: button;
 
-    /* 2 */
+	/* 2 */
 }
 
 ::-webkit-scrollbar {
-    width: 0;
-    background-color: transparent; // Make scrollbar transparent
+	width: 0;
+	background-color: transparent; // Make scrollbar transparent
 }

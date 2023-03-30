@@ -3,13 +3,13 @@ import defaultPlayerInventory from '@kaetram/e2e/cypress/fixtures/playerinventor
 import type { PlayerInventory } from '@kaetram/e2e/cypress/entities/playerinventory';
 
 export function buildPlayerInventory(
-    username: string,
-    overwrites: Partial<PlayerInventory> = {},
-    defaults: PlayerInventory = defaultPlayerInventory
+	username: string,
+	overwrites: Partial<PlayerInventory> = {},
+	defaults: PlayerInventory = defaultPlayerInventory
 ): PlayerInventory {
-    return {
-        ...defaults,
-        ...overwrites,
-        username
-    };
+	return {
+		...defaults,
+		...overwrites,
+		username
+	};
 }

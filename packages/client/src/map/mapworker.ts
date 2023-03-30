@@ -6,28 +6,28 @@
  */
 
 let width = 0,
-    height = 0,
-    data: number[] = [],
-    grid: number[][] = [];
+	height = 0,
+	data: number[] = [],
+	grid: number[][] = [];
 
 onmessage = (event) => {
-    [width, height] = event.data;
+	[width, height] = event.data;
 
-    loadGrids();
+	loadGrids();
 
-    postMessage({
-        data,
-        grid
-    });
+	postMessage({
+		data,
+		grid
+	});
 };
 
 function loadGrids() {
-    for (let y = 0; y < height; y++) {
-        grid[y] = [];
+	for (let y = 0; y < height; y++) {
+		grid[y] = [];
 
-        for (let x = 0; x < width; x++) {
-            data.push(0);
-            grid[y][x] = 0;
-        }
-    }
+		for (let x = 0; x < width; x++) {
+			data.push(0);
+			grid[y][x] = 0;
+		}
+	}
 }

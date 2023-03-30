@@ -8,12 +8,12 @@ import piratecaptain from './piratecaptain';
 import spider from './spider';
 
 export default {
-    ogrelord,
-    skeletonking,
-    queenant,
-    ant,
-    forestdragon,
-    santa,
-    piratecaptain,
-    spider
+	ogrelord,
+	skeletonking,
+	queenant,
+	ant,
+	forestdragon,
+	santa,
+	piratecaptain,
+	spider
 };

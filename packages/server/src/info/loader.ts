@@ -3,15 +3,15 @@ import Formulas from './formulas';
 import { Modules } from '@kaetram/common/network';
 
 export default class Loader {
-    /**
-     * Responsible for loading hard-coded values into the global classes.
-     */
+	/**
+	 * Responsible for loading hard-coded values into the global classes.
+	 */
 
-    public constructor() {
-        this.loadLevels();
-    }
+	public constructor() {
+		this.loadLevels();
+	}
 
-    /**
+	/**
 
     0,         83,        174,       275,       387,       511,       648,      - Lvl 0-6
     799,       966,       1151,      1355,      1580,      1829,      2103,     - Lvl 7-13
@@ -36,17 +36,17 @@ export default class Loader {
 
     **/
 
-    /**
-     * Loads the levels into the Formulas global class. The formula has been taken from RuneScape
-     * experience formula. https://runescape.fandom.com/wiki/Experience
-     */
+	/**
+	 * Loads the levels into the Formulas global class. The formula has been taken from RuneScape
+	 * experience formula. https://runescape.fandom.com/wiki/Experience
+	 */
 
-    private loadLevels(): void {
-        Formulas.LevelExp[0] = 0;
+	private loadLevels(): void {
+		Formulas.LevelExp[0] = 0;
 
-        for (let i = 1; i < Modules.Constants.MAX_LEVEL; i++) {
-            let points = Math.floor(0.25 * Math.floor(i + 300 * Math.pow(2, i / 7)));
-            Formulas.LevelExp[i] = points + Formulas.LevelExp[i - 1];
-        }
-    }
+		for (let i = 1; i < Modules.Constants.MAX_LEVEL; i++) {
+			let points = Math.floor(0.25 * Math.floor(i + 300 * Math.pow(2, i / 7)));
+			Formulas.LevelExp[i] = points + Formulas.LevelExp[i - 1];
+		}
+	}
 }

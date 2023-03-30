@@ -1,62 +1,62 @@
 import { Opcodes } from '@kaetram/common/network';
 
 export default class Arrow {
-    public x = -1;
-    public y = -1;
+	public x = -1;
+	public y = -1;
 
-    private blinkInterval!: number;
-    private visible = true;
+	private blinkInterval!: number;
+	private visible = true;
 
-    public constructor(public id: string, public element: JQuery, public type: Opcodes.Pointer) {
-        this.load();
-    }
+	public constructor(public id: string, public element: JQuery, public type: Opcodes.Pointer) {
+		this.load();
+	}
 
-    private load(): void {
-        this.blinkInterval = window.setInterval(() => {
-            if (this.visible) this.hide();
-            else this.show();
+	private load(): void {
+		this.blinkInterval = window.setInterval(() => {
+			if (this.visible) this.hide();
+			else this.show();
 
-            this.visible = !this.visible;
-        }, 600);
-    }
+			this.visible = !this.visible;
+		}, 600);
+	}
 
-    /**e
-     * Sets the coordinates of the pointer.
-     * @param x Sets the x position of the pointer (relative or absolute).
-     * @param y Sets the y position of the pointer (relative or absolute).
-     */
+	/**e
+	 * Sets the coordinates of the pointer.
+	 * @param x Sets the x position of the pointer (relative or absolute).
+	 * @param y Sets the y position of the pointer (relative or absolute).
+	 */
 
-    public setPosition(x: number, y: number): void {
-        this.x = x;
-        this.y = y;
-    }
+	public setPosition(x: number, y: number): void {
+		this.x = x;
+		this.y = y;
+	}
 
-    /**
-     * Clears the interval and deletes the pointer element.
-     */
+	/**
+	 * Clears the interval and deletes the pointer element.
+	 */
 
-    public destroy(): void {
-        clearInterval(this.blinkInterval);
+	public destroy(): void {
+		clearInterval(this.blinkInterval);
 
-        if (this.type === Opcodes.Pointer.Button) this.hide();
-        else this.element.remove();
-    }
+		if (this.type === Opcodes.Pointer.Button) this.hide();
+		else this.element.remove();
+	}
 
-    /**
-     * Displays the pointer object.
-     */
+	/**
+	 * Displays the pointer object.
+	 */
 
-    private show(): void {
-        if (this.type === Opcodes.Pointer.Button) this.element.addClass('active');
-        else this.element.show();
-    }
+	private show(): void {
+		if (this.type === Opcodes.Pointer.Button) this.element.addClass('active');
+		else this.element.show();
+	}
 
-    /**
-     * Hides the current pointer.
-     */
+	/**
+	 * Hides the current pointer.
+	 */
 
-    private hide(): void {
-        if (this.type === Opcodes.Pointer.Button) this.element.removeClass('active');
-        else this.element.hide();
-    }
+	private hide(): void {
+		if (this.type === Opcodes.Pointer.Button) this.element.removeClass('active');
+		else this.element.hide();
+	}
 }

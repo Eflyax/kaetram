@@ -3,13 +3,13 @@ import defaultPlayerInfo from '@kaetram/e2e/cypress/fixtures/playerinfo.default.
 import type { PlayerInfo } from '@kaetram/e2e/cypress/entities/playerinfo';
 
 export function buildPlayerInfo(
-    username: string,
-    overwrites: Partial<PlayerInfo> = {},
-    defaults: PlayerInfo = defaultPlayerInfo
+	username: string,
+	overwrites: Partial<PlayerInfo> = {},
+	defaults: PlayerInfo = defaultPlayerInfo
 ): PlayerInfo {
-    return {
-        ...defaults,
-        ...overwrites,
-        username
-    };
+	return {
+		...defaults,
+		...overwrites,
+		username
+	};
 }

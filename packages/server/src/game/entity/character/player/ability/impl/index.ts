@@ -8,12 +8,12 @@ import secretcalling from './secretcalling';
 import thickskin from './thickskin';
 
 export default {
-    intimidate,
-    run,
-    awareness,
-    dualistsmark,
-    hotshot,
-    thickskin,
-    precognition,
-    secretcalling
+	intimidate,
+	run,
+	awareness,
+	dualistsmark,
+	hotshot,
+	thickskin,
+	precognition,
+	secretcalling
 };

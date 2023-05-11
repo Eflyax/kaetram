@@ -8,6 +8,7 @@ import ViteLegacy from '@vitejs/plugin-legacy';
 import { ViteMinifyPlugin } from 'vite-plugin-minify';
 import { VitePWA } from 'vite-plugin-pwa';
 import { internalIpV4 } from 'internal-ip';
+import vue from '@vitejs/plugin-vue'
 
 let expose = ['name', 'host', 'ssl', 'serverId'] as const;
 
@@ -61,9 +62,11 @@ export default defineConfig(async ({ mode }) => {
 		env = loadEnv(isProduction),
 		ipv4 = await internalIpV4();
 
+
 	return {
 		appType: 'mpa',
 		plugins: [
+			vue(),
 			VitePWA({
 				registerType: 'autoUpdate',
 				workbox: { cacheId: name },

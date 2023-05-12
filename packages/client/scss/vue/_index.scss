@@ -1,7 +1,7 @@
 #app {
 	$app-border: 2px;
 
-	border: $app-border solid #000;
+	border: $app-border solid #fff;
 	height: calc(100% - $app-border * 4);
 	padding: $app-border;
 }

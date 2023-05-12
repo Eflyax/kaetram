@@ -1,18 +1,15 @@
 <script setup lang="ts">
-import App from './../app';
-import Game from './../game';
-import { onMounted } from 'vue';
+import {onMounted} from 'vue';
+import useGame from '../composables/useGame';
 
-function startGame() {
-	const
-		deprecatedApp = new App(),
-		game = new Game(deprecatedApp);
-
-	deprecatedApp.login();
-}
+const
+	{initEngine} = useGame();
 
 onMounted(() => {
-	 startGame();
+	const
+		engine = initEngine()
+
+	engine.value.ui.login();
 });
 
 </script>

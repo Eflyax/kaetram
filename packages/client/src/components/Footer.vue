@@ -1,6 +1,6 @@
 <script setup>
 import {Events} from '@/types/Events';
-import {NProgress} from 'naive-ui';
+import {NButton, NProgress} from 'naive-ui';
 import {onMounted} from 'vue';
 import {ref} from 'vue';
 import bus from '@/lib/bus';
@@ -36,22 +36,27 @@ onMounted(() => {
 		>
 		({{  hpValue }} / {{  hpMaximum }})
 		</n-progress>
-		<h1>
-			<p>Position:</p>
-			x: {{ positionX }}<br>
-			y: {{ positionY }}<br>
-		</h1>
 
+		<n-button @click="console.log('foo')">
+			Click me
+		</n-button>
+
+		<p>x: {{ positionX }}, y: {{ positionY }}</p>
 	</div>
 </template>
 
 <style lang="scss">
 .footer {
-	position: absolute;
+	background-color: gray;
+	border: 0;
 	bottom: 0;
-	width: 50%;
-	height: 100px;
-	background-color: black;
 	color: wheat;
+	height: 100px;
+	left: 0;
+	margin-left: 0;
+	padding: 0;
+	position: absolute;
+	width: 100%;
+	z-index: 10;
 }
 </style>

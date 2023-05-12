@@ -1,4 +1,7 @@
 #app {
-	border: 10px solid purple;
-	padding: 10px;
+	$app-border: 2px;
+
+	border: $app-border solid #000;
+	height: calc(100% - $app-border * 4);
+	padding: $app-border;
 }

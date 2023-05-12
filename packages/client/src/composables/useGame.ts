@@ -1,18 +1,19 @@
-import {ref} from 'vue';
-import App from './../app';
-import Game from './../game';
+// import {ref} from 'vue';
+// import App from './../app';
+// import Game from './../game';
 
-const engine = ref({});
+// const engine = ref({});
 
-export default function useGame() {
+// export default function useGame() {
 
-	function initEngine(): void {
-		engine.value = new Game(new App());
+// 	function initEngine(): void {
+// 		engine.value = new Game(new App());
 
-		return engine;
-	}
+// 		return engine;
+// 	}
 
-	return {
-		initEngine
-	};
-}
+// 	return {
+// 		initEngine,
+// 		engine
+// 	};
+// }

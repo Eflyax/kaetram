@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import {onMounted} from 'vue';
-import useGame from '../composables/useGame';
+import {onMounted, ref, provide} from 'vue';
+import Footer from './Footer.vue';
+import App from './../app';
+import Game from './../game';
 
-const
-	{initEngine} = useGame();
+let engine = ref({});
 
 onMounted(() => {
-	const
-		engine = initEngine()
-
+	engine.value = new Game(new App());
 	engine.value.ui.login();
 });
 
+provide("engine", {
+	engine
+});
 </script>
 
 <template>
@@ -467,6 +469,7 @@ onMounted(() => {
 				/>
 			</div>
 
+			<Footer />
 			<div id="player-info">
 				<div id="health"></div>
 				<div id="health-bar"></div>

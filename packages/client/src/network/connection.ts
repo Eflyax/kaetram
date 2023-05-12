@@ -172,7 +172,7 @@ export default class Connection {
 		this.game.player.serverId = data.serverId;
 
 		// Guest login doesn't require any credentials, send the packet right away.
-		if (this.app.isGuest()) return this.socket.send(Packets.Login, { opcode: Opcodes.Login.Guest });
+		if (this.app.guest) return this.socket.send(Packets.Login, { opcode: Opcodes.Login.Guest });
 
 		let username = this.app.getUsername(),
 			password = this.app.getPassword(),

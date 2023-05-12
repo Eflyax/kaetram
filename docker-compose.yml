@@ -1,9 +1,9 @@
-version: '3.7'
+version: '3.9'
 
 services:
   node:
     container_name: 'kae'
-    image: 'node:16.15.1-buster'
+    image: 'node:18.0.0-alpine'
     working_dir: '/var/www/html'
     volumes:
       - ./:/var/www/html/

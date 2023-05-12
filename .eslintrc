@@ -72,58 +72,47 @@
 				"newlines-between": "always"
 			}
 		],
-
-		// TODO: Enable on ESM
-		"unicorn/prefer-module": "off",
-		"unicorn/prefer-top-level-await": "off",
-
-		"unicorn/no-null": "off",
-		"unicorn/no-array-reduce": "off",
-		"unicorn/prefer-number-properties": "off",
-		"unicorn/prevent-abbreviations": "off",
-
-		"unicorn/prefer-at": "warn",
-		// TODO: Enable on ES2022
-		"unicorn/prefer-string-replace-all": "off",
-
-		"prettier/prettier": "warn",
-
-		"prefer-let/prefer-let": "error",
-
-		"no-fallthrough": "off",
-		"prefer-const": "off",
-
-		// NOTE: Enable on ES2022
-		"prefer-object-has-own": "off",
-		"prefer-template": "warn",
-		"no-constant-binary-expression": "warn",
-		"curly": ["warn", "multi"],
-		"one-var": ["warn", "consecutive"],
-		"yoda": "warn",
-		"no-else-return": "warn",
-		"object-shorthand": "warn",
-		"operator-assignment": "warn",
-		"prefer-destructuring": ["warn", { "object": true, "array": true }],
-
 		"array-callback-return": "error",
+		"curly": ["warn", "multi"],
 		"default-case-last": "error",
 		"dot-notation": "error",
 		"eqeqeq": "error",
 		"max-classes-per-file": "error",
-		"no-useless-backreference": "error",
-		"no-unsafe-optional-chaining": "error",
-		"no-unreachable-loop": "error",
-		"no-template-curly-in-string": "error",
-		"no-promise-executor-return": "error",
-		"no-prototype-builtins": "error",
-		"no-div-regex": "error",
-		"no-regex-spaces": "error",
+		"no-constant-binary-expression": "warn",
 		"no-control-regex": "error",
+		"no-div-regex": "error",
+		"no-else-return": "warn",
 		"no-eval": "error",
 		"no-extend-native": "error",
+		"no-fallthrough": "off",
 		"no-implied-eval": "error",
 		"no-iterator": "error",
-		"no-labels": "error"
+		"no-labels": "error",
+		"no-promise-executor-return": "error",
+		"no-prototype-builtins": "error",
+		"no-regex-spaces": "error",
+		"no-template-curly-in-string": "error",
+		"no-unreachable-loop": "error",
+		"no-unsafe-optional-chaining": "error",
+		"no-useless-backreference": "error",
+		"object-shorthand": "warn",
+		"one-var": ["warn", "consecutive"],
+		"operator-assignment": "warn",
+		"prefer-const": "off",
+		"prefer-destructuring": ["warn", { "object": true, "array": true }],
+		"prefer-let/prefer-let": "error",
+		"prefer-object-has-own": "off",
+		"prefer-template": "warn",
+		"prettier/prettier": "warn",
+		"unicorn/no-array-reduce": "off",
+		"unicorn/no-null": "off",
+		"unicorn/prefer-at": "warn",
+		"unicorn/prefer-module": "off",
+		"unicorn/prefer-number-properties": "off",
+		"unicorn/prefer-string-replace-all": "off",
+		"unicorn/prefer-top-level-await": "off",
+		"unicorn/prevent-abbreviations": "off",
+		"yoda": "warn"
 	},
 	"ignorePatterns": ["node_modules", "dist"]
 }

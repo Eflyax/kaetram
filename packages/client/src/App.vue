@@ -1,27 +1,12 @@
 <script setup lang="ts">
-import '../scss/main.scss';
-import App from './app';
-import Game from './game';
-
-const
-	deprecatedApp = new App();
-	const game = new Game(deprecatedApp);
-
-	deprecatedApp.login()
+import './../scss/main.scss';
+import Game from './components/Game.vue';
 
 </script>
 
 <template>
-  <div>
-		<button
-			style="border: 10px solid lime;"
-			@click="console.log(game)"
-		>
-			Start
-		</button>
-  </div>
+	<div>
+		<Game />
+	</div>
 </template>
 
-<style scoped lang="scss">
-
-</style>

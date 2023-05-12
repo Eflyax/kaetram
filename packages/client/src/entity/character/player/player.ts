@@ -1,3 +1,5 @@
+import bus from '../../../lib/bus';
+
 import Task from './task';
 import Skill from './skill';
 import Ability from './ability';
@@ -556,6 +558,12 @@ export default class Player extends Character {
 		// If any active ability is detected then we create a callback to display the quick slots.
 		if (type === Modules.AbilityType.Active || quickSlot !== -1)
 			this.abilityCallback?.(key, level, quickSlot);
+	}
+
+	public setPosition(x: number, y: number): void {
+		super.setPosition(x,y);
+		// todo - bus
+		bus.$emit('SET_PLAYER_POSITION', {x, y});
 	}
 
 	/**

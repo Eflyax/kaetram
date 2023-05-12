@@ -1,27 +1,37 @@
 <script setup>
-// import {inject, watchEffect} from 'vue';
+import {onMounted} from 'vue';
+import {ref} from 'vue';
+import bus from './../lib/bus';
 
-// const {engine} = inject('engine');
+const
+	positionX = ref(0),
+	positionY = ref(0);
 
-// console.log({no_effect: engine});//.value.player.moving});
-
+onMounted(() => {
+	bus.$on('SET_PLAYER_POSITION', (position) => {
+		positionX.value = position.x;
+		positionY.value = position.y;
+	});
+});
 </script>
 
 <template>
-	<div>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
+	<div class="footer">
 		<h1>
-
-			Hola:
-			<!-- name: {{ engine.value.player.name }}<br>
-			x: {{ engine.value.player.x }}<br>
-			y: {{ engine.value.player.y }}<br> -->
+			<p>Position:</p>
+			x: {{ positionX }}<br>
+			y: {{ positionY }}<br>
 		</h1>
 	</div>
 </template>
+
+<style lang="scss">
+.footer {
+	position: absolute;
+	bottom: 0;
+	widows: 100%;
+	height: 50px;
+	background-color: black;
+	color: wheat;
+}
+</style>

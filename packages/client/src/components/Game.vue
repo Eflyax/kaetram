@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import {onMounted, ref, provide} from 'vue';
+import {onMounted, ref, reactive, provide} from 'vue';
 import Footer from './Footer.vue';
 import App from './../app';
 import Game from './../game';
 
 const
-	engine = ref({}),
+	engine = reactive({}),
 	gameStarted = ref(false);
 
 onMounted(() => {
@@ -14,9 +14,9 @@ onMounted(() => {
 	gameStarted.value = true;
 });
 
-provide("engine", {
-	engine
-});
+// provide("engine", {
+// 	engine
+// });
 </script>
 
 <template>

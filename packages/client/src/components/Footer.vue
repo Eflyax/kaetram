@@ -1,9 +1,9 @@
 <script setup>
-import {inject, watchEffect} from 'vue';
+// import {inject, watchEffect} from 'vue';
 
-const {engine} = inject('engine');
+// const {engine} = inject('engine');
 
-console.log({no_effect: engine.value.player.moving});
+// console.log({no_effect: engine});//.value.player.moving});
 
 </script>
 
@@ -17,7 +17,11 @@ console.log({no_effect: engine.value.player.moving});
 		<br>
 		<br>
 		<h1>
-			Hola: {{ engine.player.moving }}
+
+			Hola:
+			<!-- name: {{ engine.value.player.name }}<br>
+			x: {{ engine.value.player.x }}<br>
+			y: {{ engine.value.player.y }}<br> -->
 		</h1>
 	</div>
 </template>

@@ -25,7 +25,7 @@ export default class App {
 
 	public body: HTMLElement = document.querySelector('body')!;
 
-	private parchment: HTMLElement = document.querySelector('#parchment')!;
+	// private parchment: HTMLElement = document.querySelector('#parchment')!;
 
 	public canvas: HTMLElement = document.querySelector('#canvas')!;
 
@@ -55,7 +55,7 @@ export default class App {
 
 	private validation: NodeListOf<HTMLElement> = document.querySelectorAll('.validation-summary')!;
 	private loading: HTMLElement = document.querySelector('.loader')!;
-	private worldSelectButton: HTMLElement = document.querySelector('#world-select-button')!;
+	// private worldSelectButton: HTMLElement = document.querySelector('#world-select-button')!;
 	private gameVersion: HTMLElement = document.querySelector('#game-version')!;
 
 	private currentScroll = 'load-character';
@@ -91,26 +91,23 @@ export default class App {
 	 */
 
 	private load(): void {
-		this.loginForm.addEventListener('submit', this.login.bind(this));
-		this.registerForm.addEventListener('submit', this.login.bind(this));
+		// this.loginForm.addEventListener('submit', this.login.bind(this));
+		// this.registerForm.addEventListener('submit', this.login.bind(this));
 
-		this.registerButton.addEventListener('click', () => this.openScroll('create-character'));
-		this.cancelRegister.addEventListener('click', () => this.openScroll('load-character'));
+		// this.registerButton.addEventListener('click', () => this.openScroll('create-character'));
+		// this.cancelRegister.addEventListener('click', () => this.openScroll('load-character'));
 
-		this.cancelWorlds.addEventListener('click', () => this.openScroll('load-character'));
-		this.continueWorlds.addEventListener('click', () => this.openScroll('load-character'));
+		// this.cancelWorlds.addEventListener('click', () => this.openScroll('load-character'));
+		// this.continueWorlds.addEventListener('click', () => this.openScroll('load-character'));
 
-		this.about.addEventListener('click', () => this.openScroll('about'));
-		this.credits.addEventListener('click', () => this.openScroll('credits'));
+		// this.respawn.addEventListener('click', () => this.respawnCallback?.());
 
-		this.respawn.addEventListener('click', () => this.respawnCallback?.());
+		// this.parchment.addEventListener('click', () => {
+		// 	if (this.hasFooterOpen()) this.openScroll('load-character');
+		// 	if (this.body.classList.contains('news')) this.body.classList.remove('news');
+		// });
 
-		this.parchment.addEventListener('click', () => {
-			if (this.hasFooterOpen()) this.openScroll('load-character');
-			if (this.body.classList.contains('news')) this.body.classList.remove('news');
-		});
-
-		this.worldSelectButton.addEventListener('click', () => this.openScroll('world-select'));
+		// this.worldSelectButton.addEventListener('click', () => this.openScroll('world-select'));
 
 		this.gameVersion.textContent = `${this.config.version}${this.config.minor}`;
 
@@ -152,11 +149,11 @@ export default class App {
 		if (!this.storage.hasRemember()) return;
 
 		// Update the input fields with the stored values.
-		this.getUsernameField().value = this.storage.getUsername();
-		this.getPasswordField().value = this.storage.getPassword();
+		// this.getUsernameField().value = this.storage.getUsername();
+		// this.getPasswordField().value = this.storage.getPassword();
 
 		// Set the checkmark for remember me to true.
-		this.rememberMe.checked = true;
+		// this.rememberMe.checked = true;
 	}
 
 	/**
@@ -181,7 +178,7 @@ export default class App {
 	public ready(): void {
 		this.sendStatus();
 
-		this.loginButton.disabled = false;
+		// this.loginButton.disabled = false;
 
 		this.loadLogin();
 		this.loadWorlds();
@@ -241,7 +238,7 @@ export default class App {
 		this.body.className = 'intro';
 
 		this.menuHidden = false;
-		this.worldSelectButton.hidden = false;
+		// this.worldSelectButton.hidden = false;
 		this.gameVersion.hidden = false;
 	}
 
@@ -256,7 +253,7 @@ export default class App {
 		this.body.className = 'game';
 
 		this.menuHidden = true;
-		this.worldSelectButton.hidden = true;
+		// this.worldSelectButton.hidden = true;
 		this.gameVersion.hidden = true;
 
 		this.updateLoader();
@@ -273,7 +270,7 @@ export default class App {
 	 */
 
 	public openScroll(destination: string): void {
-		if (this.loggingIn || this.parchmentAnimating) return;
+		// if (this.loggingIn || this.parchmentAnimating) return;
 
 		// Clears all errors that may have been displayed.
 		this.clearErrors();
@@ -290,27 +287,27 @@ export default class App {
 
 	public changeScroll(destination: string, withAnimation = false): void {
 		if (withAnimation) {
-			this.parchmentAnimating = true;
+			// this.parchmentAnimating = true;
 
 			// Toggle animation and remove the current scroll class from parchment.
-			this.parchment.classList.toggle('animate');
-			this.parchment.classList.remove(this.currentScroll);
+			// this.parchment.classList.toggle('animate');
+			// this.parchment.classList.remove(this.currentScroll);
 
-			// Set a timeout for the animation before displaying data.
-			window.setTimeout(() => {
-				// Toggle so that we can allow changing scrolls again.
-				this.parchmentAnimating = false;
+		// 	// Set a timeout for the animation before displaying data.
+		// 	window.setTimeout(() => {
+		// 		// Toggle so that we can allow changing scrolls again.
+		// 		this.parchmentAnimating = false;
 
-				// Animate again and add the new destination scroll.
-				this.parchment.classList.toggle('animate');
-				this.parchment.classList.add(destination);
+		// 		// Animate again and add the new destination scroll.
+		// 		this.parchment.classList.toggle('animate');
+		// 		this.parchment.classList.add(destination);
 
-				// Focus on the first text field in the new scroll.
-				document.querySelector<HTMLInputElement>(`#${destination} input`)?.focus();
-			}, 1000);
-		} else {
-			this.parchment.classList.remove(this.currentScroll);
-			this.parchment.classList.add(destination);
+		// 		// Focus on the first text field in the new scroll.
+		// 		document.querySelector<HTMLInputElement>(`#${destination} input`)?.focus();
+		// 	}, 1000);
+		// } else {
+		// 	this.parchment.classList.remove(this.currentScroll);
+		// 	this.parchment.classList.add(destination);
 		}
 
 		// Update the current scroll we're on to the destination.
@@ -331,12 +328,12 @@ export default class App {
 		}
 
 		// Check the username is not empty.
-		if (!this.getUsername())
-			return this.sendError('Please enter a username.', this.getUsernameField());
+		// if (!this.getUsername())
+			// return this.sendError('Please enter a username.', this.getUsernameField());
 
 		// Check if the password is not empty.
-		if (!this.getPassword())
-			return this.sendError('Please enter a password.', this.getPasswordField());
+		// if (!this.getPassword())
+			// return this.sendError('Please enter a password.', this.getPasswordField());
 
 		// Handle registration page.
 		if (this.isRegistering()) {
@@ -348,12 +345,12 @@ export default class App {
 				);
 
 			// Check that the password matches the password confirmation.
-			if (this.getPassword() !== this.getPasswordConfirmation())
-				return this.sendError('Passwords do not match.', this.passwordConfirmation);
+			// if (this.getPassword() !== this.getPasswordConfirmation())
+			// 	return this.sendError('Passwords do not match.', this.passwordConfirmation);
 
 			// Verify email against regex.
-			if (this.getEmail() !== '' && !Util.isEmail(this.getEmail()))
-				return this.sendError(`The email you've entered is not valid.`, this.emailField);
+			// if (this.getEmail() !== '' && !Util.isEmail(this.getEmail()))
+				// return this.sendError(`The email you've entered is not valid.`, this.emailField);
 		}
 
 		return true;
@@ -367,7 +364,7 @@ export default class App {
 	 */
 
 	public sendStatus(message = ''): void {
-		this.clearErrors();
+		// this.clearErrors();
 
 		this.statusMessage = message;
 
@@ -388,7 +385,7 @@ export default class App {
 	 */
 
 	public updateLoader(message = ''): void {
-		this.loading.innerHTML = message ? message + this.getLoaderDots() : '';
+		// this.loading.innerHTML = message ? message + this.getLoaderDots() : '';
 	}
 
 	/**
@@ -473,11 +470,11 @@ export default class App {
 
 		this.clearValidation();
 
-		this.getUsernameField().classList.remove('field-error');
-		this.getPasswordField().classList.remove('field-error');
+		// this.getUsernameField().classList.remove('field-error');
+		// this.getPasswordField().classList.remove('field-error');
 
-		this.passwordConfirmation.classList.remove('field-error');
-		this.emailField.classList.remove('field-error');
+		// this.passwordConfirmation.classList.remove('field-error');
+		// this.emailField.classList.remove('field-error');
 	}
 
 	/**
@@ -489,14 +486,14 @@ export default class App {
 	public toggleLogin(toggle: boolean): void {
 		this.updateLoader('Connecting');
 
-		this.toggleTyping(toggle);
+		// this.toggleTyping(toggle);
 
 		this.loggingIn = toggle;
 
-		this.loading.hidden = !toggle;
+		// this.loading.hidden = !toggle;
 
-		this.loginButton.disabled = toggle;
-		this.registerButton.disabled = toggle;
+		// this.loginButton.disabled = toggle;
+		// this.registerButton.disabled = toggle;
 	}
 
 	/**
@@ -518,9 +515,10 @@ export default class App {
 	 */
 
 	private hasFooterOpen(): boolean {
-		return (
-			this.parchment.classList.contains('about') || this.parchment.classList.contains('credits')
-		);
+		return false;
+		// return (
+		// 	this.parchment.classList.contains('about') || this.parchment.classList.contains('credits')
+		// );
 	}
 
 	/**
@@ -540,7 +538,8 @@ export default class App {
 	 */
 
 	public isRememberMe(): boolean {
-		return this.rememberMe.checked;
+		return true;
+		// return this.rememberMe.checked;
 	}
 
 	/**
@@ -580,7 +579,8 @@ export default class App {
 	 */
 
 	public getUsername(): string {
-		return this.getUsernameField().value;
+		return 'Eflyax';
+		// return this.getUsernameField().value;
 	}
 
 	/**
@@ -601,7 +601,8 @@ export default class App {
 	 */
 
 	public getPassword(): string {
-		return this.getPasswordField().value;
+		return '';
+		// return this.getPasswordField().value;
 	}
 
 	/**
@@ -687,11 +688,11 @@ export default class App {
 	private selectServer(server: SerializedServer): void {
 		this.selectedServer = server;
 
-		let name = this.worldSelectButton.querySelector('strong')!;
-		name.textContent = `${server.name}`;
+		// let name = this.worldSelectButton.querySelector('strong')!;
+		// name.textContent = `${server.name}`;
 
-		let players = this.worldSelectButton.querySelector('span')!;
-		players.textContent = `(${server.players}/${server.maxPlayers} players)`;
+		// let players = this.worldSelectButton.querySelector('span')!;
+		// players.textContent = `(${server.players}/${server.maxPlayers} players)`;
 	}
 
 	/**
@@ -721,7 +722,7 @@ export default class App {
 		// If there is only one server, then hide the world select button
 		if (servers.length < 2) return;
 
-		this.worldSelectButton.hidden = false;
+		// this.worldSelectButton.hidden = false;
 
 		for (let i in servers) {
 			let server = servers[i],

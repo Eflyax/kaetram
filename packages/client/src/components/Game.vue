@@ -20,7 +20,7 @@ onMounted(() => {
 <template>
 	<div>
 		<div id="intro">
-			<section id="parchment" class="load-character">
+			<!-- <section id="parchment" class="load-character">
 				<div class="parchment-left"></div>
 
 				<div class="parchment-middle">
@@ -236,47 +236,9 @@ onMounted(() => {
 				</div>
 
 				<div class="parchment-right"></div>
-			</section>
-
-			<button id="world-select-button" hidden>
-				<strong></strong>
-
-				<span></span>
-			</button>
+			</section> -->
 
 			<span id="game-version" class="version"></span>
-
-			<footer>
-				<div id="about-link" class="clickable">
-					<span id="toggle-about">About</span>
-				</div>
-				<span>&ndash;</span>
-				<div id="credits-link" class="clickable">
-					<span id="toggle-credits">Credits</span>
-				</div>
-				<span>&ndash;</span>
-				<div id="discord-link" class="clickable">
-					<a class="footer-button" target="_blank" href="https://discord.gg/MmbGAaw">
-						<span>Discord</span>
-					</a>
-				</div>
-				<span>&ndash;</span>
-				<div class="clickable">
-					<a
-						class="footer-button"
-						target="_blank"
-						href="https://www.patreon.com/bePatron?u=29287394"
-					>
-						<span>Patreon</span>
-					</a>
-				</div>
-				<span>&ndash;</span>
-				<div id="privacy" class="clickable">
-					<a class="footer-button" href="/privacy">
-						<span>Privacy</span>
-					</a>
-				</div>
-			</footer>
 		</div>
 
 		<div id="game-container">

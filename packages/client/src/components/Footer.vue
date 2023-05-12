@@ -1,11 +1,9 @@
 <script setup>
-// import useGame from '../composables/useGame';
+import {inject, watchEffect} from 'vue';
 
-// const
-// 	{engine} = useGame();
+const {engine} = inject('engine');
 
-
-// console.log(engine.value);//.player.maxHitPoints);
+console.log({no_effect: engine.value.player.moving});
 
 </script>
 
@@ -19,7 +17,7 @@
 		<br>
 		<br>
 		<h1>
-			Hola
+			Hola: {{ engine.player.moving }}
 		</h1>
 	</div>
 </template>

@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted} from 'vue';
 import {ref} from 'vue';
-import bus from './../lib/bus';
+import bus from '@/lib/bus';
 
 const
 	positionX = ref(0),

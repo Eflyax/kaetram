@@ -1,4 +1,4 @@
-import bus from '../../../lib/bus';
+import bus from '@/lib/bus';
 
 import Task from './task';
 import Skill from './skill';

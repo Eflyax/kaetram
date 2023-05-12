@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {onMounted, ref, reactive, provide} from 'vue';
+import {onMounted, ref, reactive} from 'vue';
 import Footer from './Footer.vue';
-import App from './../app';
-import Game from './../game';
+import App from '@/app';
+import Game from '@/game';
 
 const
 	engine = reactive({}),
@@ -14,9 +14,6 @@ onMounted(() => {
 	gameStarted.value = true;
 });
 
-// provide("engine", {
-// 	engine
-// });
 </script>
 
 <template>

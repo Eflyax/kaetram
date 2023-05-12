@@ -1,5 +1,6 @@
 <script setup>
 import {Events} from '@/types/Events';
+import {NProgress} from 'naive-ui';
 import {onMounted} from 'vue';
 import {ref} from 'vue';
 import bus from '@/lib/bus';
@@ -24,11 +25,21 @@ onMounted(() => {
 
 <template>
 	<div class="footer">
+		<n-progress
+			type="line"
+			status="error"
+			:percentage="hpValue / (hpMaximum / 100)"
+			:height="24"
+			processing
+			border-radius="12px 0 12px 0"
+			fill-border-radius="12px 0 12px 0"
+		>
+		({{  hpValue }} / {{  hpMaximum }})
+		</n-progress>
 		<h1>
 			<p>Position:</p>
 			x: {{ positionX }}<br>
 			y: {{ positionY }}<br>
-			HP: ({{  hpValue }}/{{  hpMaximum }})
 		</h1>
 
 	</div>
@@ -38,7 +49,7 @@ onMounted(() => {
 .footer {
 	position: absolute;
 	bottom: 0;
-	widows: 100%;
+	width: 50%;
 	height: 100px;
 	background-color: black;
 	color: wheat;

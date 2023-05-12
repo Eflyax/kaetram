@@ -1,5 +1,5 @@
 import bus from '@/lib/bus';
-
+import {Events} from '@/types/Events';
 import Task from './task';
 import Skill from './skill';
 import Ability from './ability';
@@ -490,9 +490,21 @@ export default class Player extends Character {
 	public setMana(mana: number, maxMana?: number): void {
 		this.mana = mana;
 
-		if (maxMana) this.maxMana = maxMana;
+		if (maxMana) {
+			this.maxMana = maxMana;
+		}
 
 		this.manaCallback?.(this.mana, maxMana || this.maxMana);
+		bus.$emit(Events.SET_PLAYER_MANA, this.mana);
+	}
+
+	public override setHitPoints(hitPoints: number, maxHitPoints?: number): void {
+		super.setHitPoints(hitPoints, maxHitPoints);
+
+		bus.$emit(Events.SET_PLAYER_HP, {
+			value: hitPoints,
+			maximum: maxHitPoints || hitPoints
+		});
 	}
 
 	/**
@@ -561,9 +573,9 @@ export default class Player extends Character {
 	}
 
 	public setPosition(x: number, y: number): void {
-		super.setPosition(x,y);
-		// todo - bus
-		bus.$emit('SET_PLAYER_POSITION', {x, y});
+		super.setPosition(x, y);
+
+		bus.$emit(Events.SET_PLAYER_POSITION, {x, y});
 	}
 
 	/**

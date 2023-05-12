@@ -73,7 +73,6 @@
 			}
 		],
 		"array-callback-return": "error",
-		"curly": ["warn", "multi"],
 		"default-case-last": "error",
 		"dot-notation": "error",
 		"eqeqeq": "error",

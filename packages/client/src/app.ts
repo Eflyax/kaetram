@@ -109,7 +109,7 @@ export default class App {
 
 		// this.worldSelectButton.addEventListener('click', () => this.openScroll('world-select'));
 
-		this.gameVersion.textContent = `${this.config.version}${this.config.minor}`;
+		// this.gameVersion.textContent = `${this.config.version}${this.config.minor}`;
 
 		// Document callbacks such as clicks and keystrokes.
 		document.addEventListener('keydown', (e: KeyboardEvent) => e.key !== 'Enter');
@@ -254,7 +254,7 @@ export default class App {
 
 		this.menuHidden = true;
 		// this.worldSelectButton.hidden = true;
-		this.gameVersion.hidden = true;
+		// this.gameVersion.hidden = true;
 
 		this.updateLoader();
 		this.saveLogin();
@@ -674,7 +674,7 @@ export default class App {
 		spanElement.classList.add('blink');
 
 		// Add the message onto the span element.
-		spanElement.textContent = message;
+		// spanElement.textContent = message;
 
 		return spanElement;
 	}

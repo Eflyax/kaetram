@@ -4,17 +4,18 @@ import App from './app';
 import Game from './game';
 
 const
-	startGame = () => {
-		const game = new Game(new App());
+	deprecatedApp = new App();
+	const game = new Game(deprecatedApp);
 
-	}
+	deprecatedApp.login()
+
 </script>
 
 <template>
   <div>
 		<button
 			style="border: 10px solid lime;"
-			@click="startGame()"
+			@click="console.log(game)"
 		>
 			Start
 		</button>

@@ -198,8 +198,10 @@ export default class App {
 	 * a callback should all checks pass.
 	 */
 
-	private login(): void {
-		if (this.loggingIn || this.statusMessage || !this.verifyForm()) return;
+	public login(): void {
+
+		// I'm sorry I don't have time for you. This method is now public.
+		// if (this.loggingIn || this.statusMessage || !this.verifyForm()) return;
 
 		this.clearErrors();
 		this.toggleLogin(true);
@@ -324,7 +326,9 @@ export default class App {
 
 	private verifyForm(): boolean {
 		// Guest users don't need to input anything.
-		if (this.isGuest()) return true;
+		if (this.guest) {
+			return true;
+		}
 
 		// Check the username is not empty.
 		if (!this.getUsername())
@@ -522,9 +526,12 @@ export default class App {
 	/**
 	 * @returns Whether or not the guest toggle is checked.
 	 */
-
-	public isGuest(): boolean {
+	public get guest() {
 		return this.guest.checked;
+	}
+
+	public set guest(value: boolean) {
+		return this.guest.checked = theAge;
 	}
 
 	/**

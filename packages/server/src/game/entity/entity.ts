@@ -63,7 +63,6 @@ abstract class Entity {
 
 		this.x = x;
 		this.y = y;
-
 		// Make a callback
 		this.movementCallback?.(x, y);
 	}

@@ -2,7 +2,6 @@ import path from 'node:path';
 
 import { description, name } from '../../package.json';
 import config, { type Config } from '../common/config';
-
 import { defineConfig } from 'vite';
 import ViteLegacy from '@vitejs/plugin-legacy';
 import { ViteMinifyPlugin } from 'vite-plugin-minify';
@@ -120,6 +119,11 @@ export default defineConfig(async ({ mode }) => {
 				port: 5183
 			}
 		},
-		define: { 'window.config': env }
+		define: { 'window.config': env },
+		resolve: {
+			alias: {
+				'@': path.resolve(__dirname, './src')
+			}
+		}
 	};
 });

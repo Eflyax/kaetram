@@ -1,7 +1,11 @@
+html,body {
+	color: #fff;
+}
+
 #app {
 	$app-border: 2px;
 
 	border: $app-border solid #fff;
-	height: calc(100% - $app-border * 4);
+	height: calc(100% - $app-border * 5);
 	padding: $app-border;
 }

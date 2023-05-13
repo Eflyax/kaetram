@@ -767,7 +767,9 @@ export default class Character extends Entity {
 		this.hitPoints = hitPoints;
 
 		// Update the max hitPoints if it is specified.
-		if (maxHitPoints) this.maxHitPoints = maxHitPoints;
+		if (maxHitPoints) {
+			this.maxHitPoints = maxHitPoints;
+		}
 
 		// Callback contains the new maxHitPoints if specified, otherwise we use the current one.
 		this.hitPointsCallback?.(this.hitPoints, maxHitPoints || this.maxHitPoints, decrease);

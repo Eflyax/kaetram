@@ -68,6 +68,9 @@ export default class Game {
 	public constructor(public app: App) {
 		this.storage = app.storage;
 
+		// todo - remove after Vue refactor
+		this.ui = app;
+
 		this.renderer = new Renderer(this);
 		this.menu = new MenuController(this);
 		this.input = new InputController(this);

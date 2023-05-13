@@ -107,6 +107,11 @@ export default class Player extends Character {
 
 		this.setMana(data.mana!, data.maxMana);
 
+		bus.$emit(Events.SET_PLAYER_MANA, {
+			value: data.mana,
+			maximum: data.maxMana
+		});
+
 		if (data.equipments) for (let equipment of data.equipments) this.equip(equipment);
 	}
 

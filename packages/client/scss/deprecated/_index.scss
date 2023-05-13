@@ -1,0 +1,33 @@
+.deprecated {
+	$zIndex: 10;
+
+	#zoom-buttons,
+	#ability-shortcut,
+	#profile-dialog,
+	#settings-page,
+	#friends-container,
+	#attack-info,
+	#map-frame,
+	#inventory ,
+	#bank,
+	#trade-container,
+	#enchant,
+	#store,
+	#equipments,
+	#achievements,
+	#quests,
+	#bubbles,
+	#notification,
+	#notifications,
+	#action-container,
+	#interact,
+	#chat,
+	#player-info {
+		z-index: $zIndex;
+	}
+
+	#player-info {
+		top: 200px;
+	}
+
+}

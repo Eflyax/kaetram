@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import {Events} from '@/types/Events';
 import {onMounted, ref, reactive} from 'vue';
-import Footer from './Footer.vue';
 import App from '@/app';
+import bus from '@/lib/bus';
+import Footer from './Footer.vue';
 import Game from '@/game';
+import Profile from './Profile.vue';
 
 const
 	engine = reactive({}),
@@ -10,10 +13,21 @@ const
 
 onMounted(() => {
 	engine.value = new Game(new App());
-	engine.value.ui.login();
+	// engine.value.ui.login();
 	gameStarted.value = true;
-});
 
+	setTimeout(() => {
+		bus.$emit(Events.SET_PLAYER_HP, {
+			value: 100,
+			maximum: 100
+		});
+		bus.$emit(Events.SET_PLAYER_MANA, {
+			value: 100,
+			maximum: 100
+		});
+	}, 100);
+
+	});
 </script>
 
 <template>
@@ -22,6 +36,7 @@ onMounted(() => {
 			v-if="gameStarted"
 			id="game-content"
 		>
+			<Profile />
 			<Footer />
 		</div>
 		<div id="game-container" class="deprecated">

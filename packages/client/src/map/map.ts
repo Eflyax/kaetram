@@ -233,25 +233,25 @@ export default class Map {
 	 */
 
 	public loadRegionData(): void {
-		this.game.storage.getRegionData((data) => {
-			// Used for debugging purposes.
-			let keys = Object.keys(data.regionData);
+		// this.game.storage.getRegionData((data) => {
+		// 	// Used for debugging purposes.
+		// 	let keys = Object.keys(data.regionData);
 
-			if (keys.length > 0) {
-				try {
-					this.loadRegions(data.regionData);
-				} catch {
-					this.game.storage.clear();
-				}
+		// 	if (keys.length > 0) {
+		// 		try {
+		// 			this.loadRegions(data.regionData);
+		// 		} catch {
+		// 			this.game.storage.clear();
+		// 		}
 
-				this.objects = data.objects;
-				this.cursorTiles = data.cursorTiles;
+		// 		this.objects = data.objects;
+		// 		this.cursorTiles = data.cursorTiles;
 
-				this.regionsLoaded = keys.length;
+		// 		this.regionsLoaded = keys.length;
 
-				log.info(`Preloaded map data with ${keys.length} regions.`);
-			}
-		});
+		// 		log.info(`Preloaded map data with ${keys.length} regions.`);
+		// 	}
+		// });
 	}
 
 	/**

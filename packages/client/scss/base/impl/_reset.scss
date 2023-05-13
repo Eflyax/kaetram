@@ -99,12 +99,10 @@ body {
 	padding: 0;
 
 	line-height: 1;
-
-	background: linear-gradient(to bottom, rgb(0 0 0 / 0%), rgb(0 0 0 / 0%), rgb(0 0 0 / 60%)),
-		url('/img/tile.png') center center;
-	background-size: auto;
-
 	image-rendering: pixelated;
+
+	height: 100%;
+	width: 100%;
 }
 
 ol,

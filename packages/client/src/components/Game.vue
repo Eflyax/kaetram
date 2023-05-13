@@ -32,6 +32,7 @@ onMounted(() => {
 
 <template>
 	<div>
+		<div class="game-background"></div>
 		<div
 			v-if="gameStarted"
 			id="game-content"
@@ -510,5 +511,15 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
-
+.game-background {
+  background-image: url('/img/tile.png');
+  display: block;
+  filter: blur(5px);
+  height: 800px;
+  left: 0;
+  position: fixed;
+  right: 0;
+  width: 100%;
+  z-index: 1;
+}
 </style>

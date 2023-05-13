@@ -36,62 +36,82 @@ onMounted(() => {
 				:percentage="20"
 				status="warning"
 				class="wrapper"
+				:color="'#ffd100'"
 			>.</n-progress>
 		</div>
 
-		<n-progress
-			type="line"
-			status="error"
-			:percentage="hpValue / (hpMaximum / 100)"
-			:height="24"
-			border-radius="12px 0 12px 0"
-			fill-border-radius="12px 0 12px 0"
-		>
-			<!-- ({{ hpValue }} / {{ hpMaximum }}) -->
-		</n-progress>
-		<n-progress
-			type="line"
-			:percentage="manaValue / (manaMaximum / 100)"
-			:height="24"
-			border-radius="12px 0 12px 0"
-			fill-border-radius="12px 0 12px 0"
-		>
-			<!-- ({{ manaValue }} / {{ manaMaximum }}) -->
-		</n-progress>
+		<div class="bars">
+			<n-progress
+				type="line"
+				status="error"
+				:percentage="hpValue / (hpMaximum / 100)"
+				:height="24"
+				border-radius="12px 0 12px 0"
+				fill-border-radius="12px 0 12px 0"
+				:indicator-placement="'inside'"
+			/>
+			<n-progress
+				type="line"
+				:percentage="manaValue / (manaMaximum / 100)"
+				:height="24"
+				border-radius="12px 0 12px 0"
+				fill-border-radius="12px 0 12px 0"
+				:indicator-placement="'inside'"
+			/>
+		</div>
 	</div>
 </template>
 
 <style lang="scss">
+$backgroundColor: black;
+
 #profile {
 	$margin: 50px;
 	//
-	background-color: lime;
 	border: 0;
 	color: wheat;
+	display: flex;
+	flex-direction: row;
 	height: 130px;
 	left: $margin;
 	position: absolute;
 	top: $margin;
 	width: 400px;
-	z-index: 10;
+	z-index: 100;
 
 	.avatar {
+		background-color: $backgroundColor;
+		border-radius: 120px;
+		height: 120px;
+		padding: 10px;
+		width: 120px;
+
 		.wrapper {
 			position: absolute;
 			z-index: 20;
 		}
 
 		.avatar-icon {
-			background-position: 0 10px;
+			$backgroundSize: 110px;
+			//
 			background-repeat: no-repeat;
-			background-size: 100px 110px;
+			background-size: $backgroundSize $backgroundSize;
 			height: 105px;
-			left: 10px;
+			left: 25px;
 			position: absolute;
-			top: 10px;
-			width: 100px;
+			top: 25px;
+			width: 115px;
 			z-index: 10;
 		}
+	}
+
+	.bars {
+		$leftOverflow: 65px;
+		//
+		background-color: $backgroundColor;
+		flex: 1;
+		margin-left: -$leftOverflow;
+		padding: 10px 10px 10px $leftOverflow;
 	}
 }
 </style>
